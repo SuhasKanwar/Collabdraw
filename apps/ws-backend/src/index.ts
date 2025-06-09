@@ -1,0 +1,1 @@
+console.log("This is the ws-backend app, running in Node.js environment.");
