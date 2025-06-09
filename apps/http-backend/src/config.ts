@@ -1,0 +1,2 @@
+export const HTTP_SERVER_PORT: number = parseInt(process.env.HTTP_SERVER_PORT || "9090", 10);
+export const JWT_SECRET: string = process.env.JWT_SECRET as string;
