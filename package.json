@@ -1,5 +1,5 @@
 {
-  "name": "Project_016_Collabdraw",
+  "name": "collabdraw",
   "private": true,
   "scripts": {
     "build": "turbo run build",
