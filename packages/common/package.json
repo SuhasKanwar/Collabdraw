@@ -1,0 +1,29 @@
+{
+  "name": "@repo/common",
+  "version": "1.0.0",
+  "description": "All the common utilities and schema between the backend and frontend",
+  "homepage": "https://github.com/SuhasKanwar/Collabdraw#readme",
+  "bugs": {
+    "url": "https://github.com/SuhasKanwar/Collabdraw/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuhasKanwar/Collabdraw.git"
+  },
+  "license": "ISC",
+  "author": "Suhas Kanwar",
+  "type": "commonjs",
+  "main": "index.js",
+  "exports": {
+    "./schema": "./src/schema.ts" 
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "zod": "^3.25.57"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*"
+  }
+}

@@ -20,11 +20,13 @@
     "dev": "npm run build && npm run start"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*"
-  },
-  "dependencies": {
+    "@repo/typescript-config": "workspace:*",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.9",
+    "@repo/backend-utils": "workspace:*",
+    "@repo/common": "workspace:*"
+  },
+  "dependencies": {
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2"
   }

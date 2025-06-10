@@ -1,5 +1,5 @@
 import express from 'express';
-import { HTTP_SERVER_PORT } from './config';
+import { HTTP_SERVER_PORT } from '@repo/backend-utils/config';
 
 const app = express();
 
