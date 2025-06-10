@@ -24,7 +24,8 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.9",
     "@repo/backend-utils": "workspace:*",
-    "@repo/common": "workspace:*"
+    "@repo/common": "workspace:*",
+    "@repo/db": "workspace:*"
   },
   "dependencies": {
     "express": "^5.1.0",

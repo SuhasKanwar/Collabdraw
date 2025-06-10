@@ -1,0 +1,30 @@
+{
+  "name": "@repo/db",
+  "version": "1.0.0",
+  "description": "The database schema for the project",
+  "homepage": "https://github.com/SuhasKanwar/Collabdraw#readme",
+  "bugs": {
+    "url": "https://github.com/SuhasKanwar/Collabdraw/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuhasKanwar/Collabdraw.git"
+  },
+  "license": "ISC",
+  "author": "Suhas Kanwar",
+  "type": "commonjs",
+  "main": "index.js",
+  "exports": {
+    "./db": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*"
+  },
+  "dependencies": {
+    "@prisma/client": "6.9.0",
+    "prisma": "^6.9.0"
+  }
+}
