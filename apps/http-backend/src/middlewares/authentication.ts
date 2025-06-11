@@ -12,4 +12,5 @@ export function authenticationMiddleware(req: Request, res: Response, next: Next
         res.status(401).json({ message: "Unauthorized" });
         return;
     }
+    next();
 }

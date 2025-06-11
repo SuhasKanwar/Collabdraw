@@ -1,7 +1,13 @@
 import express from 'express';
 import { HTTP_SERVER_PORT } from '@repo/backend-utils/config';
+import { logger } from "@repo/backend-utils/logger";
 
 const app = express();
+
+// Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(logger('./logs.txt'));
 
 // Routes
 import authenticationRouter from './routes/authenticationRouter';

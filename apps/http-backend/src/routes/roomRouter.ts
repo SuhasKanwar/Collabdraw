@@ -6,6 +6,6 @@ import { createRoomHandler } from "../controllers/roomController";
 
 import { authenticationMiddleware } from "../middlewares/authentication";
 
-router.post("/", authenticationMiddleware, createRoomHandler);
+router.post("/create", authenticationMiddleware, createRoomHandler);
 
 export default router;
