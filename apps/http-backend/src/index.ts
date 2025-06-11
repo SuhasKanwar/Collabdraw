@@ -1,6 +1,7 @@
 import express from 'express';
 import { HTTP_SERVER_PORT } from '@repo/backend-utils/config';
 import { logger } from "@repo/backend-utils/logger";
+import { authenticationMiddleware } from "./middlewares/authentication";
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.use(logger('./logs.txt'));
 import authenticationRouter from './routes/authenticationRouter';
 import roomRouter from './routes/roomRouter';
 app.use('/api/auth', authenticationRouter);
-app.use('/api/room', roomRouter);
+app.use('/api/room', authenticationMiddleware, roomRouter);
 
 app.listen(HTTP_SERVER_PORT, (error) => {
     if(error) {

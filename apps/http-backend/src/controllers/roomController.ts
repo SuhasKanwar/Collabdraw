@@ -42,3 +42,32 @@ export const createRoomHandler = async (req: Request, res: Response): Promise<vo
         return;
     }
 }
+
+export const getChatsHandler = async (req: Request, res: Response): Promise<void> => {
+    const roomId = Number(req.params.roomId);
+    if (!roomId) {
+        res.status(400).json({ error: 'Room ID is required' });
+        return;
+    }
+    try {
+        const chats = await prismaClient.chat.findMany({
+            where: {
+                roomId: roomId
+            },
+            orderBy: {
+                createdAt: 'asc'
+            },
+            take: 100
+        });
+
+        res.status(200).json({
+            message: 'Chats fetched successfully',
+            chats: chats
+        });
+        return;
+    }
+    catch (e) {
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+    }
+}

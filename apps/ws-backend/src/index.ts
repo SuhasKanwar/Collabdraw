@@ -1,6 +1,7 @@
 import { WebSocketServer, WebSocket } from 'ws';
 import { WS_SERVER_PORT } from '@repo/backend-utils/config';
 import authenticate from './middlewares/authentication';
+import { prismaClient } from "@repo/db/client";
 
 const wss = new WebSocketServer({ port: WS_SERVER_PORT });
 
@@ -37,7 +38,7 @@ wss.on('connection', (ws, request) => {
         rooms: []
     });
 
-    ws.on("message", function message(data) {
+    ws.on("message", async function message(data) {
         const parsedData = JSON.parse(data as unknown as string);
 
         if(parsedData.type == "join_room") {
@@ -47,7 +48,7 @@ wss.on('connection', (ws, request) => {
         else if(parsedData.type == "leave_room") {
             const user = users.find(user => user.ws === ws);
             if(!user) return;
-            user.rooms = user?.rooms.filter(room => room === parsedData.room);
+            user.rooms = user?.rooms.filter(room => room !== parsedData.room);
         }
         else if(parsedData.type == "chat") {
             const roomId = parsedData.roomId;
@@ -60,6 +61,14 @@ wss.on('connection', (ws, request) => {
                         message: message,
                         roomId: roomId
                     }));
+                }
+            });
+            
+            await prismaClient.chat.create({
+                data: {
+                    userId: authenticatedUserId,
+                    roomId: roomId,
+                    message: message
                 }
             });
         }
