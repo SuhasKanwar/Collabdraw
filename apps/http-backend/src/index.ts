@@ -14,9 +14,10 @@ app.use(logger('./logs.txt'));
 import authenticationRouter from './routes/authenticationRouter';
 import roomRouter from './routes/roomRouter';
 app.use('/api/auth', authenticationRouter);
-app.use('/api/room', authenticationMiddleware, roomRouter);
+// app.use('/api/room', authenticationMiddleware, roomRouter);
+app.use('/api/room', roomRouter);
 
-app.listen(HTTP_SERVER_PORT, (error) => {
+app.listen(7070, (error) => {
     if(error) {
         console.error(`Error starting HTTP server -> ${error.message}`);
     }
