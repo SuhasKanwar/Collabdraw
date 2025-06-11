@@ -1,6 +1,6 @@
-import { WebSocketServer } from 'ws';
-import jwt from 'jsonwebtoken';
-import { JWT_SECRET, WS_SERVER_PORT } from '@repo/backend-utils/config';
+import { WebSocketServer, WebSocket } from 'ws';
+import { WS_SERVER_PORT } from '@repo/backend-utils/config';
+import authenticate from './middlewares/authentication';
 
 const wss = new WebSocketServer({ port: WS_SERVER_PORT });
 
@@ -8,6 +8,14 @@ wss.on('listening', () => {
     console.log(`WebSocket server is running on port -> ${WS_SERVER_PORT}`);
     console.log(`\n\n ws://localhost:${WS_SERVER_PORT} \n\n`);
 });
+
+interface User {
+    ws: WebSocket;
+    userId: string;
+    rooms: string[];
+}
+
+const users: User[] = [];
 
 wss.on('connection', (ws, request) => {
     const url = request.url;
@@ -17,18 +25,43 @@ wss.on('connection', (ws, request) => {
     }
     const queryParams = new URLSearchParams(url.split('?')[1]);
     const token = queryParams.get('token') || '';
-    const decoded = jwt.verify(token, JWT_SECRET);
-
-    if(typeof decoded == "string") {
-        ws.close();
-        return;
-    }
-    if(!decoded || !decoded.userId) {
+    const authenticatedUserId = authenticate(token);
+    if(!authenticatedUserId) {
         ws.close();
         return;
     }
 
-    ws.on("message", (message) => {
-        ws.send(message);
+    users.push({
+        ws,
+        userId: authenticatedUserId,
+        rooms: []
+    });
+
+    ws.on("message", function message(data) {
+        const parsedData = JSON.parse(data as unknown as string);
+
+        if(parsedData.type == "join_room") {
+            const user = users.find(user => user.ws === ws);
+            user?.rooms.push(parsedData.roomId);
+        }
+        else if(parsedData.type == "leave_room") {
+            const user = users.find(user => user.ws === ws);
+            if(!user) return;
+            user.rooms = user?.rooms.filter(room => room === parsedData.room);
+        }
+        else if(parsedData.type == "chat") {
+            const roomId = parsedData.roomId;
+            const message = parsedData.message;
+
+            users.forEach(user => {
+                if(user.rooms.includes(roomId)) {
+                    user.ws.send(JSON.stringify({
+                        type: 'chat',
+                        message: message,
+                        roomId: roomId
+                    }));
+                }
+            });
+        }
     })
 });
