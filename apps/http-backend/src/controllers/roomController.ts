@@ -71,3 +71,33 @@ export const getChatsHandler = async (req: Request, res: Response): Promise<void
         return;
     }
 }
+
+export const getRoomHandler = async (req: Request, res: Response): Promise<void> => {
+    const slug = req.params.slug;
+    if (!slug) {
+        res.status(400).json({ error: 'Room slug is required' });
+        return;
+    }
+    try {
+        const room = await prismaClient.room.findFirst({
+            where: {
+                slug: slug
+            }
+        });
+
+        if (!room) {
+            res.status(404).json({ error: 'Room not found' });
+            return;
+        }
+
+        res.status(200).json({
+            message: 'Room fetched successfully',
+            room: room
+        });
+        return;
+    }
+    catch (e) {
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+    }
+}
