@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { HTTP_SERVER_PORT } from '@repo/backend-utils/config';
 import { logger } from "@repo/backend-utils/logger";
 import { authenticationMiddleware } from "./middlewares/authentication";
@@ -7,8 +8,9 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
 app.use(logger('./logs.txt'));
+app.use(cors());
 
 // Routes
 import authenticationRouter from './routes/authenticationRouter';

@@ -6,6 +6,7 @@ import { createRoomHandler, getChatsHandler, getRoomHandler } from "../controlle
 
 router.post("/create", createRoomHandler);
 router.get("/chats/:roomId", getChatsHandler);
+router.get("/shapes/:roomId", getChatsHandler);
 router.get("/:slug", getRoomHandler);
 
 export default router;

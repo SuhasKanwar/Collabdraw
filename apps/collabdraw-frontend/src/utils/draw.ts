@@ -1,3 +1,6 @@
+import { HTTP_BACKEND_URL } from "@/config";
+import axios from "axios";
+
 type Shape = {
     type: "rectangle";
     x: number;
@@ -11,18 +14,25 @@ type Shape = {
     radius: number;
 }
 
-export function initDraw(canvas: HTMLCanvasElement) {
+export async function initDraw(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
     const ctx = canvas.getContext("2d");
     if (!ctx) {
         console.error("Failed to get canvas context");
         return;
     }
 
-    let existingShapes: Shape[] = [];
+    let existingShapes: Shape[] = await getExistingShapes(roomId);
 
-    ctx.fillStyle = "rgba(0, 0, 0)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    socket.onmessage = (event) => {
+        const parsedData = JSON.parse(event.data);
+        if(parsedData.type === "chat") {
+            const parsedShape = JSON.parse(parsedData.message);
+            existingShapes.push(parsedShape);
+            clearCanvas(existingShapes, canvas, ctx);
+        }
+    }
 
+    clearCanvas(existingShapes, canvas, ctx);
     let clicked = false;
     let startX = 0;
     let startY = 0;
@@ -38,13 +48,19 @@ export function initDraw(canvas: HTMLCanvasElement) {
         clicked = false;
         const width = e.clientX - startX;
         const height = e.clientY - startY;
-        existingShapes.push({
+        const shape: Shape = {
             type: "rectangle",
             x: startX,
             y: startY,
             width: width,
             height: height
-        });
+        }
+        existingShapes.push(shape);
+        socket.send(JSON.stringify({
+            type: "chat",
+            message: JSON.stringify(shape),
+            roomId: roomId
+        }));
     });
 
     canvas.addEventListener("mousemove", (e) => {
@@ -69,4 +85,22 @@ function clearCanvas(existingShapes: Shape[], canvas: HTMLCanvasElement, ctx: Ca
             ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
         }
     })
+}
+
+async function getExistingShapes(roomId: string): Promise<Shape[]> {
+    try {
+        const response = await axios.get(`${HTTP_BACKEND_URL}/api/room/shapes/${roomId}`);
+        const messages = response.data.chats;
+    
+        const shapes = messages.map((message: { message: string }) => {
+            const messageData = JSON.parse(message.message);
+            return messageData;
+        });
+    
+        return shapes;
+    }
+    catch (error) {
+        console.error("Error fetching existing shapes:", error);
+        return [];
+    }
 }
