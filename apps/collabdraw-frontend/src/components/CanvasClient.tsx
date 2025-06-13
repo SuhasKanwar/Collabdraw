@@ -1,36 +1,43 @@
 "use client";
 
-import { initDraw } from "@/utils/draw1";
 import { useEffect, useRef, useState } from "react";
 import ToolBar from "./ToolBar";
+import { Draw } from "@/utils/draw";
+import { Tool } from "@/types/tools";
 
-export enum Tool {
-  Pencil = "pencil",
-  Eraser = "eraser",
-  Line = "line",
-  Rectangle = "rectangle",
-  Circle = "circle",
-  Text = "text",
-}
-
-export default function CanvasClient({ roomId, socket }: { roomId: string; socket: WebSocket }) {
+export default function CanvasClient({
+  roomId,
+  socket,
+}: {
+  roomId: string;
+  socket: WebSocket;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [selectedTool , setSelectedTool] = useState<Tool>(Tool.Pencil);
+  const [draw, setDraw] = useState<Draw>();
+  const [selectedTool, setSelectedTool] = useState<Tool>(Tool.Pencil);
 
   useEffect(() => {
-    // @ts-ignore
-    window.selectedTool = selectedTool;
-  }, [selectedTool]);
+    draw?.setSelectedTool(selectedTool);
+  }, [selectedTool, draw]);
 
   useEffect(() => {
     if (canvasRef.current) {
-      initDraw(canvasRef.current, roomId, socket);
+      const newDraw = new Draw(canvasRef.current, roomId, socket);
+      setDraw(newDraw);
+
+      return () => {
+        newDraw.destroy();
+      };
     }
   }, [canvasRef]);
 
   return (
     <div className="h-screen overflow-hidden">
-      <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight}></canvas>
+      <canvas
+        ref={canvasRef}
+        width={window.innerWidth}
+        height={window.innerHeight}
+      ></canvas>
       <ToolBar selectedTool={selectedTool} setSelectedTool={setSelectedTool} />
     </div>
   );
