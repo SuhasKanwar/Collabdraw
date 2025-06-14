@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import type React from "react";
+import { AuthProvider } from "@/providers/AuthProvide";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,10 +34,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.className} overflow-x-hidden`}
-      >
-        <main className="min-h-screen">{children}</main>
+      <body className={`${inter.className} overflow-x-hidden`}>
+        <main className="min-h-screen">
+          <AuthProvider>{children}</AuthProvider>
+        </main>
       </body>
     </html>
   );

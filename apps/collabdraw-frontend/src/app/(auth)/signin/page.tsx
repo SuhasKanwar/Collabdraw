@@ -1,5 +1,8 @@
-import AuthPage from "@/components/AuthPage";
-
 export default function SignInPage() {
-    return <AuthPage isSignin={true} />
+    return (
+        <section>
+            <h1>Signin</h1>
+            <p></p>
+        </section>
+    );
 }
