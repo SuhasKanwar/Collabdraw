@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import type React from "react";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,6 +39,7 @@ export default function RootLayout({
         <main className="min-h-screen">
           <AuthProvider>{children}</AuthProvider>
         </main>
+        <Toaster/>
       </body>
     </html>
   );

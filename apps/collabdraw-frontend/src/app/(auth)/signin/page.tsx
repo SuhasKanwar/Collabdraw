@@ -1,8 +1,8 @@
+import AuthComponent from "@/components/AuthComponent";
+
+function handleSignIn() {
+}
+
 export default function SignInPage() {
-    return (
-        <section>
-            <h1>Signin</h1>
-            <p></p>
-        </section>
-    );
+    return <AuthComponent isSignUp={false} />;
 }

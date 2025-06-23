@@ -1,6 +1,6 @@
 import { Circle, PencilIcon, RectangleHorizontalIcon } from "lucide-react";
 import { IconButton } from "./IconButton";
-import { Tool } from "./CanvasClient";
+import { Tool } from "@/types/tools";
 
 export default function ToolBar({ selectedTool, setSelectedTool } : { selectedTool: Tool; setSelectedTool: (tool: Tool) => void }) {
     return (
