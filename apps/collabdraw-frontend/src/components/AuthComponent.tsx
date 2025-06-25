@@ -11,18 +11,98 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Eye, EyeOff, Mail, Lock, User, Palette, Github } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Palette, Github, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { api } from "@/lib/api";
+import { useAuth } from "@/providers/AuthProvider";
 
 function handleComingSoon() {
-    toast.info("This service is not available currently.");
+  toast.info("This service is not available currently.");
 }
 
-export default function AuthComponent({ isSignUp, handleSignIn, handleSignUp } : { isSignUp: boolean, handleSignIn?: () => void, handleSignUp?: () => void }) {
+async function handleSignIn(formData: FormData, setToken: Function): Promise<boolean> {
+  const { email, password } = Object.fromEntries(formData.entries());
+  try {
+    const response = await api.post("/api/auth/signin", {
+      email: email,
+      password: password,
+    });
+    if (response.status !== 200) {
+      toast.error(response.data.error || "Sign in failed. Please try again.");
+      return false;
+    }
+    setToken(response.data.token);
+    return true;
+  } catch (error) {
+    if (error instanceof Error) {
+      toast.error(error.message || "Sign in failed. Please try again.");
+    } else {
+      toast.error("An unexpected error occurred. Please try again.");
+    }
+    return false;
+  }
+}
+
+async function handleSignUp(formData: FormData): Promise<boolean> {
+  const { email, password, name } = Object.fromEntries(formData.entries());
+  try {
+    const repponse = await api.post("/api/auth/signup", {
+      name: name,
+      email: email,
+      password: password,
+    });
+    if (repponse.status !== 201) {
+      toast.error(repponse.data.error || "Sign up failed. Please try again.");
+      return false;
+    }
+    return true;
+  } catch (error) {
+    if (error instanceof Error) {
+      toast.error(error.message || "Sign up failed. Please try again.");
+    } else {
+      toast.error("An unexpected error occurred. Please try again.");
+    }
+    return false;
+  }
+}
+
+export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setToken } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    setLoading(true);
+
+    if (isSignUp) {
+      if (formData.get("password") !== formData.get("confirmPassword")) {
+        toast.error("Passwords do not match.");
+        setLoading(false);
+        return;
+      }
+      const success = await handleSignUp(formData);
+      if (success) {
+        toast.success("Account created successfully");
+        setTimeout(() => {
+          router.push("/signin");
+        }, 1000);
+      }
+    } else {
+      const success = await handleSignIn(formData, setToken);
+      if (success) {
+        toast.success("Signed in successfully");
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 1000);
+      }
+    }
+    setLoading(false);
+  };
 
   return (
     <section className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-4 relative overflow-hidden">
@@ -106,7 +186,7 @@ export default function AuthComponent({ isSignUp, handleSignIn, handleSignUp } :
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               {isSignUp && (
                 <div className="space-y-2">
                   <Label
@@ -119,9 +199,11 @@ export default function AuthComponent({ isSignUp, handleSignIn, handleSignUp } :
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <Input
                       id="name"
+                      name="name"
                       type="text"
                       placeholder="Enter your full name"
                       className="pl-10 bg-gray-800/50 border-gray-700 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500/20"
+                      required
                     />
                   </div>
                 </div>
@@ -138,9 +220,11 @@ export default function AuthComponent({ isSignUp, handleSignIn, handleSignUp } :
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                   <Input
                     id="email"
+                    name="email"
                     type="email"
                     placeholder="Enter your email"
                     className="pl-10 bg-gray-800/50 border-gray-700 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500/20"
+                    required
                   />
                 </div>
               </div>
@@ -156,9 +240,11 @@ export default function AuthComponent({ isSignUp, handleSignIn, handleSignUp } :
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                   <Input
                     id="password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     className="pl-10 pr-10 bg-gray-800/50 border-gray-700 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500/20"
+                    required
                   />
                   <button
                     type="button"
@@ -186,9 +272,11 @@ export default function AuthComponent({ isSignUp, handleSignIn, handleSignUp } :
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <Input
                       id="confirmPassword"
+                      name="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="Confirm your password"
                       className="pl-10 pr-10 bg-gray-800/50 border-gray-700 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500/20"
+                      required
                     />
                     <button
                       type="button"
@@ -207,29 +295,19 @@ export default function AuthComponent({ isSignUp, handleSignIn, handleSignUp } :
                 </div>
               )}
 
-              {!isSignUp && (
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center space-x-2 text-sm">
-                    <input
-                      type="checkbox"
-                      className="rounded border-slate-600 bg-slate-700 text-purple-500 focus:ring-purple-500/20"
-                    />
-                    <span className="text-slate-400">Remember me</span>
-                  </label>
-                  <button
-                    type="button"
-                    className="text-sm text-purple-400 hover:text-purple-300"
-                  >
-                    Forgot password?
-                  </button>
-                </div>
-              )}
-
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-2.5 transition-all duration-200 transform hover:scale-[1.02]"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-2.5 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                {isSignUp ? "Create Account" : "Sign In"}
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {isSignUp ? "Creating Account..." : "Signing In..."}
+                  </>
+                ) : (
+                  isSignUp ? "Create Account" : "Sign In"
+                )}
               </Button>
             </form>
 
@@ -238,7 +316,7 @@ export default function AuthComponent({ isSignUp, handleSignIn, handleSignUp } :
                 <div className="w-full border-t border-slate-600"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 text-slate-400">
+                <span className="px-2 text-slate-400 bg-[#0d1422]">
                   Or continue with
                 </span>
               </div>
@@ -247,7 +325,8 @@ export default function AuthComponent({ isSignUp, handleSignIn, handleSignUp } :
             <div className="grid grid-cols-2 gap-3">
               <Button
                 variant="outline"
-                className="bg-gray-800/50 border-gray-700 text-slate-300 hover:bg-gray-700/50 hover:text-white"
+                disabled={loading}
+                className="bg-gray-800/50 border-gray-700 text-slate-300 hover:bg-gray-700/50 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleComingSoon}
               >
                 <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
@@ -272,7 +351,8 @@ export default function AuthComponent({ isSignUp, handleSignIn, handleSignUp } :
               </Button>
               <Button
                 variant="outline"
-                className="bg-gray-800/50 border-gray-700 text-slate-300 hover:bg-gray-700/50 hover:text-white"
+                disabled={loading}
+                className="bg-gray-800/50 border-gray-700 text-slate-300 hover:bg-gray-700/50 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleComingSoon}
               >
                 <Github />
@@ -286,8 +366,9 @@ export default function AuthComponent({ isSignUp, handleSignIn, handleSignUp } :
                   ? "Already have an account?"
                   : "Don't have an account?"}{" "}
                 <button
+                  disabled={loading}
                   onClick={() => router.push(isSignUp ? "/signin" : "/signup")}
-                  className="text-purple-400 hover:text-purple-300 font-medium"
+                  className="text-purple-400 hover:text-purple-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSignUp ? "Sign in" : "Sign up"}
                 </button>

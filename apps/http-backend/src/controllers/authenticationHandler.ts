@@ -8,7 +8,7 @@ import bcrypt from 'bcryptjs';
 export const signupHandler = async (req: Request, res: Response): Promise<void> => {
     const parsedData = CreateUserSchema.safeParse(req.body);
     if (!parsedData.success) {
-        res.status(400).json({ error: parsedData.error.errors });
+        res.status(400).json({ error: parsedData.error.errors});
         return;
     }
     try {
@@ -18,8 +18,7 @@ export const signupHandler = async (req: Request, res: Response): Promise<void> 
             data: {
                 email: parsedData.data.email,
                 password: hashedPassword,
-                name: parsedData.data.name,
-                username: parsedData.data.username
+                name: parsedData.data.name
             }
         });
         res.status(201).json({
@@ -27,8 +26,7 @@ export const signupHandler = async (req: Request, res: Response): Promise<void> 
             user: {
                 id: user.id,
                 email: user.email,
-                name: user.name,
-                username: user.username
+                name: user.name
             }
         });
         return;
@@ -76,8 +74,7 @@ export const signinHandler = async (req: Request, res: Response): Promise<void> 
             user: {
                 id: user.id,
                 email: user.email,
-                name: user.name,
-                username: user.username
+                name: user.name
             }
         });
         return;

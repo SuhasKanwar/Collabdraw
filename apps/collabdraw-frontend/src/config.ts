@@ -1,2 +1,2 @@
-export const HTTP_BACKEND_URL = process.env.NEXT_PUBLIC_HTTP_BACKEND_URL || "http://localhost:7070";
+export const HTTP_BACKEND_URL = process.env.NEXT_PUBLIC_HTTP_BACKEND_URL || "http://localhost:9090";
 export const WS_BACKEND_URL = process.env.NEXT_PUBLIC_WS_BACKEND_URL || "ws://localhost:8080";

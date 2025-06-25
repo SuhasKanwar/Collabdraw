@@ -8,7 +8,6 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
 app.use(logger('./logs.txt'));
 app.use(cors());
 
@@ -19,7 +18,7 @@ app.use('/api/auth', authenticationRouter);
 // app.use('/api/room', authenticationMiddleware, roomRouter);
 app.use('/api/room', roomRouter);
 
-app.listen(7070, (error) => {
+app.listen(HTTP_SERVER_PORT, (error) => {
     if(error) {
         console.error(`Error starting HTTP server -> ${error.message}`);
     }
