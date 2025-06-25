@@ -19,7 +19,9 @@ export const createRoomHandler = async (req: Request, res: Response): Promise<vo
         const room = await prismaClient.room.create({
             data: {
                 slug: parsedData.data.slug,
-                adminId: userId
+                adminId: userId,
+                title: parsedData.data.title,
+                description: parsedData.data.description
             }
         });
 
@@ -57,7 +59,7 @@ export const getChatsHandler = async (req: Request, res: Response): Promise<void
             orderBy: {
                 createdAt: 'asc'
             },
-            take: 100
+            take: 50
         });
 
         res.status(200).json({
@@ -93,6 +95,34 @@ export const getRoomHandler = async (req: Request, res: Response): Promise<void>
         res.status(200).json({
             message: 'Room fetched successfully',
             room: room
+        });
+        return;
+    }
+    catch (e) {
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+    }
+}
+
+export const getShapesHandler = async (req: Request, res: Response): Promise<void> => {
+    const roomId = Number(req.params.roomId);
+    if (!roomId) {
+        res.status(400).json({ error: 'Room ID is required' });
+        return;
+    }
+    try {
+        const shapes = await prismaClient.shape.findMany({
+            where: {
+                roomId: roomId
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
+        });
+
+        res.status(200).json({
+            message: 'Shapes fetched successfully',
+            shapes: shapes
         });
         return;
     }
