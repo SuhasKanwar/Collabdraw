@@ -84,6 +84,3 @@ export const signinHandler = async (req: Request, res: Response): Promise<void> 
         return;
     }
 }
-
-export const signoutHandler = async (req: Request, res: Response): Promise<void> => {
-}

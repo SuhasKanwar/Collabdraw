@@ -21,11 +21,14 @@ model User {
 model Room {
   id        Int      @id @default(autoincrement())
   slug      String   @unique
+  title     String
+  description String?
   adminId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  admin     User     @relation(fields: [adminId], references: [id])
+  admin     User     @relation(fields: [adminId], references: [id], onDelete: Restrict)
   chats     Chat[]
+  shapes    Shape[]
 }
 
 model Chat {
@@ -35,6 +38,16 @@ model Chat {
   message   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  room      Room     @relation(fields: [roomId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Shape {
+  id        Int      @id @default(autoincrement())
+  roomId    Int
+  type      String
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
