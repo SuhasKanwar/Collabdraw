@@ -2,8 +2,9 @@ import { Router } from "express";
 
 const router: Router = Router();
 
-import { createRoomHandler, getChatsHandler, getRoomHandler, getShapesHandler } from "../controllers/roomController";
+import { createRoomHandler, getChatsHandler, getRoomHandler, getShapesHandler, getAllRoomsHandler } from "../controllers/roomController";
 
+router.get("/rooms", getAllRoomsHandler);
 router.post("/create", createRoomHandler);
 router.get("/chats/:roomId", getChatsHandler);
 router.get("/shapes/:roomId", getShapesHandler);

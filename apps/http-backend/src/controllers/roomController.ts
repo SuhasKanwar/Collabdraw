@@ -131,3 +131,31 @@ export const getShapesHandler = async (req: Request, res: Response): Promise<voi
         return;
     }
 }
+
+export const getAllRoomsHandler = async (req: Request, res: Response): Promise<void> => {
+    const adminId = req.userId;
+    if (!adminId) {
+        res.status(400).json({ error: 'Admin ID is required' });
+        return;
+    }
+    try {
+        const rooms = await prismaClient.room.findMany({
+            where: {
+                adminId: adminId
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+
+        res.status(200).json({
+            message: 'Rooms fetched successfully',
+            rooms: rooms
+        });
+        return;
+    }
+    catch (e) {
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+    }
+}
