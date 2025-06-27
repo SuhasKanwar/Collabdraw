@@ -3,11 +3,13 @@ import cors from 'cors';
 import { HTTP_SERVER_PORT } from '@repo/backend-utils/config';
 import { logger } from "@repo/backend-utils/logger";
 import { authenticationMiddleware } from "./middlewares/authentication";
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 // Middlewares
 app.use(express.json());
+app.use(cookieParser());
 app.use(logger('./logs.txt'));
 app.use(cors());
 
@@ -15,8 +17,7 @@ app.use(cors());
 import authenticationRouter from './routes/authenticationRouter';
 import roomRouter from './routes/roomRouter';
 app.use('/api/auth', authenticationRouter);
-// app.use('/api/room', authenticationMiddleware, roomRouter);
-app.use('/api/room', roomRouter);
+app.use('/api/room', authenticationMiddleware, roomRouter);
 
 app.listen(HTTP_SERVER_PORT, (error) => {
     if(error) {
