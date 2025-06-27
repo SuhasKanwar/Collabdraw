@@ -16,6 +16,7 @@ model User {
   updatedAt DateTime @updatedAt
   rooms     Room[]
   chats     Chat[]
+  joinedRooms UserRoomMapping[]
 }
 
 model Room {
@@ -29,6 +30,18 @@ model Room {
   admin     User     @relation(fields: [adminId], references: [id], onDelete: Restrict)
   chats     Chat[]
   shapes    Shape[]
+  members   UserRoomMapping[]
+}
+
+model UserRoomMapping {
+  userId String
+  roomId Int
+  joinedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roomId])
 }
 
 model Chat {

@@ -25,6 +25,13 @@ export const createRoomHandler = async (req: Request, res: Response): Promise<vo
             }
         });
 
+        await prismaClient.userRoomMapping.create({
+            data: {
+                userId: userId,
+                roomId: room.id
+            }
+        });
+
         res.status(201).json({
             message: 'Room created successfully',
             room: {
@@ -133,18 +140,18 @@ export const getShapesHandler = async (req: Request, res: Response): Promise<voi
 }
 
 export const getAllRoomsHandler = async (req: Request, res: Response): Promise<void> => {
-    const adminId = req.userId;
-    if (!adminId) {
+    const userId = req.userId;
+    if (!userId) {
         res.status(400).json({ error: 'Admin ID is required' });
         return;
     }
     try {
-        const rooms = await prismaClient.room.findMany({
+        const rooms = await prismaClient.userRoomMapping.findMany({
             where: {
-                adminId: adminId
+                userId: userId
             },
             orderBy: {
-                createdAt: 'desc'
+                joinedAt: 'desc'
             }
         });
 
