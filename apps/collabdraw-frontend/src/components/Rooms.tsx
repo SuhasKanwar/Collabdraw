@@ -3,8 +3,8 @@
 import { Room } from "@/types/room";
 import RoomCard from "./RoomCard";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { api } from "@/lib/api";
 
 async function getRooms() {
   try {
@@ -15,8 +15,7 @@ async function getRooms() {
       return [];
     }
   } catch (error: any) {
-    console.error("Error fetching rooms:", error);
-    return [];
+    throw new Error("Failed to fetch rooms");
   }
 }
 
@@ -29,7 +28,7 @@ export default function Rooms() {
       .catch(() => {
         toast.error("Failed to fetch rooms");
       });
-  }, [rooms]);
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -42,7 +41,7 @@ export default function Rooms() {
               key={room.id}
               slug={room.slug}
               title={room.title}
-              description={room.title}
+              description={room.description}
               createdAt={room.createdAt}
             />
           ))}

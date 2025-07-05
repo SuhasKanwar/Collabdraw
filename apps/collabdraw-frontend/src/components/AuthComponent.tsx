@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Eye, EyeOff, Mail, Lock, User, Palette, Github, Loader2 } from "lucide-react";
+import { Mail, Lock, User, Palette, Github, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
@@ -68,8 +68,6 @@ async function handleSignUp(formData: FormData): Promise<boolean> {
 }
 
 export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { setToken } = useAuth();
@@ -241,22 +239,11 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
                   <Input
                     id="password"
                     name="password"
-                    type={showPassword ? "text" : "password"}
+                    type="password"
                     placeholder="Enter your password"
                     className="pl-10 pr-10 bg-gray-800/50 border-gray-700 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500/20"
                     required
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-300"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
-                  </button>
                 </div>
               </div>
 
@@ -273,24 +260,11 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
                     <Input
                       id="confirmPassword"
                       name="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
+                      type="password"
                       placeholder="Confirm your password"
                       className="pl-10 pr-10 bg-gray-800/50 border-gray-700 text-white placeholder:text-slate-400 focus:border-purple-500 focus:ring-purple-500/20"
                       required
                     />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-300"
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </button>
                   </div>
                 </div>
               )}

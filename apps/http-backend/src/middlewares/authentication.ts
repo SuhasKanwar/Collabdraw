@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { JWT_SECRET } from '@repo/backend-utils/config';
 
 export function authenticationMiddleware(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers["authorization"] ?? "";
+    const token = req.cookies.token ?? "";
     try {
         const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
         if(decoded.userId) {

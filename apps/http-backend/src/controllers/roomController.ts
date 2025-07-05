@@ -146,12 +146,25 @@ export const getAllRoomsHandler = async (req: Request, res: Response): Promise<v
         return;
     }
     try {
-        const rooms = await prismaClient.userRoomMapping.findMany({
+        const userRooms = await prismaClient.userRoomMapping.findMany({
             where: {
                 userId: userId
             },
             orderBy: {
                 joinedAt: 'desc'
+            }
+        });
+
+        const roomIds = userRooms.map(mapping => mapping.roomId);
+
+        const rooms = await prismaClient.room.findMany({
+            where: {
+                id: {
+                    in: roomIds
+                }
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         });
 

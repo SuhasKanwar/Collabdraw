@@ -68,9 +68,16 @@ export const signinHandler = async (req: Request, res: Response): Promise<void> 
             userId: user?.id,
         }, JWT_SECRET);
 
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: false, // TODO: for production, set this to true
+            sameSite: 'lax',
+            maxAge: 3 * 24 * 60 * 60 * 1000
+        });
+
         res.status(200).json({
             message: 'User signed in successfully',
-            token,
+            token: token,
             user: {
                 id: user.id,
                 email: user.email,

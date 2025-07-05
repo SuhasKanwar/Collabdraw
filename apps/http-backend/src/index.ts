@@ -11,7 +11,10 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(logger('./logs.txt'));
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 
 // Routes
 import authenticationRouter from './routes/authenticationRouter';
