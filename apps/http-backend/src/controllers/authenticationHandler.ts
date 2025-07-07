@@ -91,3 +91,12 @@ export const signinHandler = async (req: Request, res: Response): Promise<void> 
         return;
     }
 }
+
+export const logoutHandler = async (req: Request, res: Response): Promise<void> => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: false, // TODO: for production, set this to true
+        sameSite: 'lax',
+    });
+    res.status(200).json({ message: 'User logged out successfully' });
+};

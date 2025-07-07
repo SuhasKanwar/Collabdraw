@@ -7,13 +7,15 @@ interface AuthContext {
     setToken: (token: string | null) => void;
     isAuthenticated: boolean;
     logout: () => void;
+    isLoggedIn: boolean;
 }
 
 const AuthContext = createContext<AuthContext>({
     token: null,
     setToken: () => {},
     isAuthenticated: false,
-    logout: () => {}
+    logout: () => {},
+    isLoggedIn: false
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -41,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     return (
-        <AuthContext.Provider value={{ token, setToken, isAuthenticated: !!token, logout }}>
+        <AuthContext.Provider value={{ token, setToken, isAuthenticated: !!token, logout, isLoggedIn: !!token }}>
             {children}
         </AuthContext.Provider>
     )

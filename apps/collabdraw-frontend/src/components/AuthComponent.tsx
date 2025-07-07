@@ -11,11 +11,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Mail, Lock, User, Palette, Github, Loader2 } from "lucide-react";
+import { Mail, Lock, User, Github, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { useAuth } from "@/providers/AuthProvider";
+import Logo from "./Logo";
 
 function handleComingSoon() {
   toast.info("This service is not available currently.");
@@ -103,81 +104,92 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-4 relative overflow-hidden">
+    <section className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-pink-300/15 to-purple-300/15 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute top-20 left-20 w-24 h-24 border-2 border-gray-500/40 rounded-full animate-pulse"></div>
         <div
-          className="absolute bottom-32 left-40 w-40 h-40 bg-gradient-to-r from-green-300/15 to-emerald-300/15 rounded-full blur-2xl animate-pulse"
+          className="absolute bottom-32 right-40 w-32 h-8 border-2 border-gray-500/30 rounded-full animate-pulse"
           style={{ animationDelay: "2s" }}
         ></div>
         <div
-          className="absolute top-40 right-32 w-24 h-16 bg-gradient-to-r from-blue-300/15 to-cyan-300/15 rounded-lg blur-lg animate-bounce rotate-12"
+          className="absolute top-40 right-32 w-16 h-16 border-2 border-gray-500/35 rotate-45 animate-pulse"
           style={{ animationDelay: "1s" }}
         ></div>
         <div
-          className="absolute top-1/3 right-10 w-36 h-20 bg-gradient-to-r from-indigo-300/15 to-purple-300/15 rounded-xl blur-2xl animate-bounce -rotate-12"
+          className="absolute top-1/3 left-10 w-20 h-20 border-2 border-gray-500/30 rounded-lg rotate-12 animate-pulse"
           style={{ animationDelay: "1.5s" }}
         ></div>
         <div
-          className="absolute bottom-20 right-20 w-28 h-18 bg-gradient-to-r from-yellow-300/15 to-orange-300/15 rounded-lg blur-xl animate-pulse rotate-45"
+          className="absolute bottom-20 left-20 w-18 h-18 border-2 border-gray-500/40 rounded-full animate-pulse"
           style={{ animationDelay: "0.5s" }}
         ></div>
         <div
-          className="absolute top-1/2 left-10 w-20 h-20 bg-gradient-to-r from-rose-300/15 to-pink-300/15 blur-lg animate-pulse"
-          style={{
-            clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
-            animationDelay: "3s",
-          }}
+          className="absolute top-60 left-1/3 w-12 h-12 border-2 border-gray-500/35 rounded-lg rotate-45 animate-pulse"
+          style={{ animationDelay: "3s" }}
         ></div>
-        <div
-          className="absolute top-60 left-1/3 w-16 h-16 bg-gradient-to-r from-violet-300/15 to-fuchsia-300/15 blur-lg animate-bounce"
-          style={{
-            clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
-            animationDelay: "2.5s",
-            transform: "rotate(180deg)",
-          }}
-        ></div>
-        <div
-          className="absolute top-32 left-1/2 w-24 h-24 bg-gradient-to-r from-teal-300/15 to-cyan-300/15 blur-xl animate-pulse"
-          style={{
-            clipPath:
-              "polygon(20% 0%, 80% 10%, 100% 35%, 85% 70%, 75% 100%, 50% 85%, 25% 100%, 0% 75%, 10% 50%, 0% 25%)",
-            animationDelay: "4s",
-          }}
-        ></div>
-        <div
-          className="absolute bottom-40 right-1/3 w-32 h-20 bg-gradient-to-r from-amber-300/15 to-yellow-300/15 blur-lg animate-bounce"
-          style={{
-            clipPath:
-              "polygon(25% 0%, 75% 15%, 100% 50%, 80% 85%, 40% 100%, 0% 70%, 15% 30%)",
-            animationDelay: "1.8s",
-          }}
-        ></div>
-        <div
-          className="absolute top-3/4 left-1/4 w-18 h-18 bg-gradient-to-r from-emerald-300/15 to-green-300/15 blur-lg animate-pulse rotate-45"
-          style={{ animationDelay: "3.5s" }}
-        ></div>
+        <svg
+          className="absolute top-10 right-10 w-32 h-32 opacity-30"
+          viewBox="0 0 100 100"
+        >
+          <path
+            d="M10,50 Q30,20 50,50 T90,50"
+            stroke="#6B7280"
+            strokeWidth="2"
+            fill="none"
+          />
+        </svg>
+        <svg
+          className="absolute bottom-10 left-10 w-24 h-24 opacity-25 rotate-45"
+          viewBox="0 0 100 100"
+        >
+          <path
+            d="M20,80 Q40,20 60,80 T100,80"
+            stroke="#6B7280"
+            strokeWidth="2"
+            fill="none"
+          />
+        </svg>
+        <svg
+          className="absolute top-1/2 right-20 w-28 h-28 opacity-20"
+          viewBox="0 0 100 100"
+        >
+          <path
+            d="M10,10 Q50,80 90,10 M20,90 Q60,30 100,90"
+            stroke="#6B7280"
+            strokeWidth="1.5"
+            fill="none"
+          />
+        </svg>
+        <svg
+          className="absolute bottom-1/3 left-1/4 w-20 h-20 opacity-25 rotate-12"
+          viewBox="0 0 100 100"
+        >
+          <path
+            d="M30,10 Q10,50 30,90 Q70,70 90,30 Q60,10 30,10"
+            stroke="#6B7280"
+            strokeWidth="1.5"
+            fill="none"
+          />
+        </svg>
       </div>
       <div className="relative z-10 w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <Palette className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <Logo />
+            <h1 className="text-2xl font-bold text-gray-200">
               CollabDraw
             </h1>
           </div>
-          <p className="text-slate-400 text-sm">
+          <p className="text-gray-400 text-sm">
             Create, collaborate, and bring your ideas to life
           </p>
         </div>
-        <Card className="bg-gray-900/60 backdrop-blur-xl border-gray-800/50 shadow-2xl">
+        <Card className="bg-gray-900/40 backdrop-blur-sm border-gray-700/30 shadow-xl">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-white">
+            <CardTitle className="text-2xl font-bold text-gray-100">
               {isSignUp ? "Join CollabDraw" : "Welcome Back"}
             </CardTitle>
-            <CardDescription className="text-slate-400">
+            <CardDescription className="text-gray-400">
               {isSignUp
                 ? "Create your account and start collaborating"
                 : "Sign in to continue your creative journey"}
@@ -272,7 +284,7 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-2.5 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full bg-gray-800 hover:bg-gray-700 text-gray-100 font-medium py-2.5 transition-all duration-200 border border-gray-600/30 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <>
@@ -287,10 +299,10 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-600"></div>
+                <div className="w-full border-t border-gray-700/50"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 text-slate-400 bg-[#0d1422]">
+                <span className="px-2 text-gray-400 bg-gray-900/40">
                   Or continue with
                 </span>
               </div>
@@ -300,7 +312,7 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
               <Button
                 variant="outline"
                 disabled={loading}
-                className="bg-gray-800/50 border-gray-700 text-slate-300 hover:bg-gray-700/50 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-gray-800/50 border-gray-700/50 text-gray-300 hover:bg-gray-700/50 hover:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleComingSoon}
               >
                 <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
@@ -326,7 +338,7 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
               <Button
                 variant="outline"
                 disabled={loading}
-                className="bg-gray-800/50 border-gray-700 text-slate-300 hover:bg-gray-700/50 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-gray-800/50 border-gray-700/50 text-gray-300 hover:bg-gray-700/50 hover:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handleComingSoon}
               >
                 <Github />
@@ -335,14 +347,14 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
             </div>
 
             <div className="text-center">
-              <p className="text-slate-400 text-sm">
+              <p className="text-gray-400 text-sm">
                 {isSignUp
                   ? "Already have an account?"
                   : "Don't have an account?"}{" "}
                 <button
                   disabled={loading}
                   onClick={() => router.push(isSignUp ? "/signin" : "/signup")}
-                  className="text-purple-400 hover:text-purple-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="text-gray-300 hover:text-gray-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSignUp ? "Sign in" : "Sign up"}
                 </button>
@@ -352,13 +364,13 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
         </Card>
 
         <div className="text-center mt-8">
-          <p className="text-slate-500 text-xs">
+          <p className="text-gray-500 text-xs">
             By continuing, you agree to our{" "}
-            <a href="#" className="text-purple-400 hover:text-purple-300">
+            <a href="#" className="text-gray-400 hover:text-gray-300">
               Terms of Service
             </a>{" "}
             and{" "}
-            <a href="#" className="text-purple-400 hover:text-purple-300">
+            <a href="#" className="text-gray-400 hover:text-gray-300">
               Privacy Policy
             </a>
           </p>

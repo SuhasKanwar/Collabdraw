@@ -137,49 +137,6 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
-  apps/web:
-    dependencies:
-      axios:
-        specifier: ^1.9.0
-        version: 1.9.0
-      next:
-        specifier: 15.3.3
-        version: 15.3.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      react:
-        specifier: ^19.0.0
-        version: 19.1.0
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.1.0(react@19.1.0)
-    devDependencies:
-      '@eslint/eslintrc':
-        specifier: ^3
-        version: 3.3.1
-      '@tailwindcss/postcss':
-        specifier: ^4
-        version: 4.1.9
-      '@types/node':
-        specifier: ^20
-        version: 20.19.0
-      '@types/react':
-        specifier: ^19
-        version: 19.1.0
-      '@types/react-dom':
-        specifier: ^19
-        version: 19.1.1(@types/react@19.1.0)
-      eslint:
-        specifier: ^9
-        version: 9.28.0(jiti@2.4.2)
-      eslint-config-next:
-        specifier: 15.3.3
-        version: 15.3.3(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.2)
-      tailwindcss:
-        specifier: ^4
-        version: 4.1.9
-      typescript:
-        specifier: ^5
-        version: 5.8.2
-
   apps/ws-backend:
     dependencies:
       '@repo/db':
@@ -235,10 +192,10 @@ importers:
     dependencies:
       '@prisma/client':
         specifier: 6.9.0
-        version: 6.9.0(prisma@6.9.0(typescript@5.8.2))(typescript@5.8.2)
+        version: 6.9.0(prisma@6.9.0(typescript@5.8.3))(typescript@5.8.3)
       prisma:
         specifier: ^6.9.0
-        version: 6.9.0(typescript@5.8.2)
+        version: 6.9.0(typescript@5.8.3)
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*
@@ -2757,6 +2714,7 @@ packages:
   semver@7.6.2:
     resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
     engines: {node: '>=10'}
+    hasBin: true
 
   semver@7.7.2:
     resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
@@ -3471,10 +3429,10 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@prisma/client@6.9.0(prisma@6.9.0(typescript@5.8.2))(typescript@5.8.2)':
+  '@prisma/client@6.9.0(prisma@6.9.0(typescript@5.8.3))(typescript@5.8.3)':
     optionalDependencies:
-      prisma: 6.9.0(typescript@5.8.2)
-      typescript: 5.8.2
+      prisma: 6.9.0(typescript@5.8.3)
+      typescript: 5.8.3
 
   '@prisma/config@6.9.0':
     dependencies:
@@ -5723,12 +5681,12 @@ snapshots:
 
   prettier@3.5.3: {}
 
-  prisma@6.9.0(typescript@5.8.2):
+  prisma@6.9.0(typescript@5.8.3):
     dependencies:
       '@prisma/config': 6.9.0
       '@prisma/engines': 6.9.0
     optionalDependencies:
-      typescript: 5.8.2
+      typescript: 5.8.3
 
   prop-types@15.8.1:
     dependencies:

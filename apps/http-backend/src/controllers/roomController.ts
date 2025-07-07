@@ -155,7 +155,7 @@ export const getAllRoomsHandler = async (req: Request, res: Response): Promise<v
             }
         });
 
-        const roomIds = userRooms.map(mapping => mapping.roomId);
+        const roomIds = userRooms.map((mapping: { roomId: number }) => mapping.roomId);
 
         const rooms = await prismaClient.room.findMany({
             where: {
