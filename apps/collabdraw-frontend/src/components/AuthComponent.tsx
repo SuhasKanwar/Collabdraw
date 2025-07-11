@@ -104,7 +104,7 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
+    <section className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-20 w-24 h-24 border-2 border-gray-500/40 rounded-full animate-pulse"></div>
         <div

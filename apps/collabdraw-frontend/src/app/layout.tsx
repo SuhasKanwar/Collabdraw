@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} overflow-x-hidden bg-black text-white`}>
-        <main className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
+        <main className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-950 to-gray-900">
           <AuthProvider>{children}</AuthProvider>
         </main>
         <Toaster theme="dark" />
