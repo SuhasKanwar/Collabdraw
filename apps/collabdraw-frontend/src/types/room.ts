@@ -4,7 +4,7 @@ export interface Room {
     title: string;
     description?: string;
     createdAt: string;
-    updatedAt: string;
+    joinedAt: string;
     adminId: number;
     currentUserId?: number | null;
     icon?: string;

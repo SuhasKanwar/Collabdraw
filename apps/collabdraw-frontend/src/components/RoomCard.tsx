@@ -2,28 +2,12 @@ import {
   Users,
   Calendar,
   ArrowRight,
-  Palette,
   Crown,
   Edit3,
-  Home,
-  Brush,
-  Camera,
-  Coffee,
-  Gamepad2,
-  Heart,
-  Music,
-  Star,
-  Zap,
-  Book,
-  Code,
-  Image,
-  Map,
-  Pen,
-  Settings,
-  Shield,
-  Target,
+  Home
 } from "lucide-react";
 import Link from "next/link";
+import { iconMap } from "@/types/icons";
 
 interface RoomCardProps {
   id: number;
@@ -31,7 +15,7 @@ interface RoomCardProps {
   title: string;
   description?: string;
   createdAt: string;
-  updatedAt: string;
+  joinedAt: string;
   adminId: number;
   currentUserId?: number | null;
   icon?: string;
@@ -44,15 +28,15 @@ export default function RoomCard(props: RoomCardProps) {
     title,
     description,
     createdAt,
-    updatedAt,
+    joinedAt,
     adminId,
     currentUserId,
     icon,
   } = props;
 
   const isAdmin = currentUserId === adminId;
-  const isRecentlyUpdated =
-    new Date(updatedAt).getTime() > new Date(createdAt).getTime();
+  const isRecentlyJoined =
+    new Date(joinedAt).getTime() > new Date(createdAt).getTime();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -80,10 +64,10 @@ export default function RoomCard(props: RoomCardProps) {
   };
 
   const getLastActivity = () => {
-    if (isRecentlyUpdated) {
+    if (isRecentlyJoined) {
       return {
-        text: `Updated ${formatDate(updatedAt)}`,
-        time: formatTime(updatedAt),
+        text: `Joined ${formatDate(joinedAt)}`,
+        time: formatTime(joinedAt),
         icon: Edit3,
         color: "text-green-400",
       };
@@ -99,27 +83,6 @@ export default function RoomCard(props: RoomCardProps) {
   const activity = getLastActivity();
 
   const getIcon = (iconName?: string) => {
-    const iconMap: { [key: string]: any } = {
-      palette: Palette,
-      brush: Brush,
-      camera: Camera,
-      coffee: Coffee,
-      gamepad: Gamepad2,
-      heart: Heart,
-      music: Music,
-      star: Star,
-      zap: Zap,
-      book: Book,
-      code: Code,
-      image: Image,
-      map: Map,
-      pen: Pen,
-      settings: Settings,
-      shield: Shield,
-      target: Target,
-      home: Home,
-    };
-
     const IconComponent = iconName
       ? iconMap[iconName.toLowerCase()] || Home
       : Home;
@@ -136,7 +99,7 @@ export default function RoomCard(props: RoomCardProps) {
               <span>Admin</span>
             </div>
           )}
-          {isRecentlyUpdated && (
+          {isRecentlyJoined && (
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
           )}
         </div>
@@ -145,10 +108,6 @@ export default function RoomCard(props: RoomCardProps) {
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
               {getIcon(icon)}
-            </div>
-            <div className="flex items-center gap-2 text-xs text-gray-400">
-              <Users className="w-3 h-3" />
-              <span>0 active</span>
             </div>
           </div>
         </div>

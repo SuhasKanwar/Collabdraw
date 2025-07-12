@@ -2,10 +2,14 @@
 
 import { Room } from "@/types/room";
 import RoomCard from "./RoomCard";
+import CreateRoomDialog from "./CreateRoomDialog";
+import JoinRoomDialog from "./JoinRoomDialog";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
-import { Plus, Palette, Crown, Users, Search, Filter, TrendingUp } from "lucide-react";
+import { Plus, Palette, Crown, Users, Search, Filter, TrendingUp, UserPlus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 async function getRooms() {
   try {
@@ -47,9 +51,17 @@ export default function Rooms() {
       });
   }, []);
 
+  const handleRoomCreated = (newRoom: Room) => {
+    setRooms(prevRooms => [...prevRooms, newRoom]);
+  };
+
+  const handleRoomJoined = (newRoom: Room) => {
+    setRooms(prevRooms => [...prevRooms, newRoom]);
+  };
+
   const filteredRooms = rooms.filter(room => {
-    const matchesSearch = room.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         room.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = (room.title?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+                         (room.description?.toLowerCase() || '').includes(searchTerm.toLowerCase());
     
     switch (filterType) {
       case "owned":
@@ -57,7 +69,7 @@ export default function Rooms() {
       case "recent":
         const weekAgo = new Date();
         weekAgo.setDate(weekAgo.getDate() - 7);
-        return matchesSearch && new Date(room.updatedAt || room.createdAt) > weekAgo;
+        return matchesSearch && new Date(room.joinedAt || room.createdAt) > weekAgo;
       default:
         return matchesSearch;
     }
@@ -68,7 +80,7 @@ export default function Rooms() {
     const recentlyUpdated = rooms.filter(room => {
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
-      return new Date(room.updatedAt || room.createdAt) > weekAgo;
+      return new Date(room.joinedAt || room.createdAt) > weekAgo;
     });
 
     return {
@@ -95,7 +107,7 @@ export default function Rooms() {
         </div>
 
         {!loading && rooms.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
             <div className="bg-gray-900/60 backdrop-blur-sm border border-gray-700 rounded-xl p-4">
               <div className="flex items-center gap-3">
                 <Users className="w-5 h-5 text-blue-400" />
@@ -126,11 +138,9 @@ export default function Rooms() {
               </div>
             </div>
             
-            <button className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg">
-              <Plus className="w-5 h-5" />
-              Create Room
-            </button>
-          </div>
+            <CreateRoomDialog onRoomCreated={handleRoomCreated} />
+            <JoinRoomDialog onRoomJoined={handleRoomJoined} />
+        </div>
         )}
         
         {!loading && rooms.length > 0 && (
@@ -138,12 +148,12 @@ export default function Rooms() {
             <div className="flex flex-col sm:flex-row gap-3 flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
+                <Input
                   type="text"
                   placeholder="Search rooms..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 bg-gray-900/60 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors w-full sm:w-64"
+                  className="pl-10 bg-gray-900/60 border-gray-700 text-white placeholder-gray-400 w-full sm:w-64"
                 />
               </div>
               
@@ -153,17 +163,15 @@ export default function Rooms() {
                   { key: "owned", label: "Owned", count: stats.owned },
                   { key: "recent", label: "Recent", count: stats.recent }
                 ].map(filter => (
-                  <button
+                  <Button
                     key={filter.key}
+                    variant={filterType === filter.key ? "default" : "secondary"}
+                    size="sm"
                     onClick={() => setFilterType(filter.key as any)}
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      filterType === filter.key
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                    }`}
+                    className={filterType === filter.key ? "bg-blue-600" : "bg-gray-800 hover:bg-gray-700"}
                   >
                     {filter.label} ({filter.count})
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -201,7 +209,7 @@ export default function Rooms() {
                 title={room.title}
                 description={room.description}
                 createdAt={room.createdAt}
-                updatedAt={room.updatedAt}
+                joinedAt={room.joinedAt || room.createdAt}
                 adminId={room.adminId}
                 currentUserId={currentUserId}
                 icon={room.icon}
@@ -238,13 +246,29 @@ export default function Rooms() {
               No rooms yet
             </h3>
             <p className="text-gray-400 mb-8">
-              Get started by creating your first collaborative room. Invite team
-              members and start drawing together!
+              Get started by creating your first collaborative room or join an existing one with a room slug.
             </p>
-            <button className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg mx-auto">
-              <Plus className="w-5 h-5" />
-              Create Your First Room
-            </button>
+            <div className="flex gap-4 justify-center">
+              <CreateRoomDialog 
+                onRoomCreated={handleRoomCreated}
+                trigger={
+                  <Button className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                    <Plus className="w-5 h-5" />
+                    Create Room
+                  </Button>
+                }
+              />
+              
+              <JoinRoomDialog 
+                onRoomJoined={handleRoomJoined}
+                trigger={
+                  <Button variant="outline" className="flex items-center gap-2 border-gray-600 text-gray-300 hover:bg-gray-800">
+                    <UserPlus className="w-5 h-5" />
+                    Join Room
+                  </Button>
+                }
+              />
+            </div>
           </div>
         </div>
       )}
