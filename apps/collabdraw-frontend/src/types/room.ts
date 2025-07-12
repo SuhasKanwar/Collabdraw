@@ -6,4 +6,6 @@ export interface Room {
     createdAt: string;
     updatedAt: string;
     adminId: number;
+    currentUserId?: number | null;
+    icon?: string;
 }

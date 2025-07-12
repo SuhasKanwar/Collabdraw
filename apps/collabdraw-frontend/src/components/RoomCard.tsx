@@ -1,138 +1,194 @@
-import { Users, Calendar, ArrowRight, Palette, Crown, Clock, Edit3 } from "lucide-react";
+import {
+  Users,
+  Calendar,
+  ArrowRight,
+  Palette,
+  Crown,
+  Edit3,
+  Home,
+  Brush,
+  Camera,
+  Coffee,
+  Gamepad2,
+  Heart,
+  Music,
+  Star,
+  Zap,
+  Book,
+  Code,
+  Image,
+  Map,
+  Pen,
+  Settings,
+  Shield,
+  Target,
+} from "lucide-react";
 import Link from "next/link";
 
 interface RoomCardProps {
-    id: number;
-    slug: string;
-    title: string;
-    description?: string;
-    createdAt: string;
-    updatedAt: string;
-    adminId: number;
-    currentUserId?: number | null;
+  id: number;
+  slug: string;
+  title: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+  adminId: number;
+  currentUserId?: number | null;
+  icon?: string;
 }
 
 export default function RoomCard(props: RoomCardProps) {
-    const { slug, id, title, description, createdAt, updatedAt, adminId, currentUserId } = props;
-    
-    const isAdmin = currentUserId === adminId;
-    const isRecentlyUpdated = new Date(updatedAt).getTime() > new Date(createdAt).getTime();
+  const {
+    slug,
+    id,
+    title,
+    description,
+    createdAt,
+    updatedAt,
+    adminId,
+    currentUserId,
+    icon,
+  } = props;
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffTime = Math.abs(now.getTime() - date.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
-        if (diffDays === 1) return "Today";
-        if (diffDays === 2) return "Yesterday";
-        if (diffDays <= 7) return `${diffDays - 1} days ago`;
-        
-        return date.toLocaleDateString('en-US', { 
-            month: 'short', 
-            day: 'numeric',
-            year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
-        });
+  const isAdmin = currentUserId === adminId;
+  const isRecentlyUpdated =
+    new Date(updatedAt).getTime() > new Date(createdAt).getTime();
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) return "Today";
+    if (diffDays === 2) return "Yesterday";
+    if (diffDays <= 7) return `${diffDays - 1} days ago`;
+
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+    });
+  };
+
+  const formatTime = (dateString: string) => {
+    return new Date(dateString).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const getLastActivity = () => {
+    if (isRecentlyUpdated) {
+      return {
+        text: `Updated ${formatDate(updatedAt)}`,
+        time: formatTime(updatedAt),
+        icon: Edit3,
+        color: "text-green-400",
+      };
+    }
+    return {
+      text: `Created ${formatDate(createdAt)}`,
+      time: formatTime(createdAt),
+      icon: Calendar,
+      color: "text-gray-500",
+    };
+  };
+
+  const activity = getLastActivity();
+
+  const getIcon = (iconName?: string) => {
+    const iconMap: { [key: string]: any } = {
+      palette: Palette,
+      brush: Brush,
+      camera: Camera,
+      coffee: Coffee,
+      gamepad: Gamepad2,
+      heart: Heart,
+      music: Music,
+      star: Star,
+      zap: Zap,
+      book: Book,
+      code: Code,
+      image: Image,
+      map: Map,
+      pen: Pen,
+      settings: Settings,
+      shield: Shield,
+      target: Target,
+      home: Home,
     };
 
-    const formatTime = (dateString: string) => {
-        return new Date(dateString).toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        });
-    };
+    const IconComponent = iconName
+      ? iconMap[iconName.toLowerCase()] || Home
+      : Home;
+    return <IconComponent className="w-6 h-6 text-white" />;
+  };
 
-    const getLastActivity = () => {
-        if (isRecentlyUpdated) {
-            return {
-                text: `Updated ${formatDate(updatedAt)}`,
-                time: formatTime(updatedAt),
-                icon: Edit3,
-                color: "text-green-400"
-            };
-        }
-        return {
-            text: `Created ${formatDate(createdAt)}`,
-            time: formatTime(createdAt),
-            icon: Calendar,
-            color: "text-gray-500"
-        };
-    };
-
-    const activity = getLastActivity();
-
-    return (
-        <Link href={`/canvas/${id}`} className="group block">
-            <div className="relative bg-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 transition-all duration-300 hover:border-gray-600 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-blue-500/10 transform hover:-translate-y-1">
-                {/* Status Indicators */}
-                <div className="absolute top-4 right-4 flex items-center gap-2">
-                    {isAdmin && (
-                        <div className="flex items-center gap-1 bg-amber-500/20 text-amber-400 px-2 py-1 rounded-full text-xs font-medium">
-                            <Crown className="w-3 h-3" />
-                            <span>Admin</span>
-                        </div>
-                    )}
-                    {isRecentlyUpdated && (
-                        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    )}
-                </div>
-
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4 pr-16">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                            <Palette className="w-6 h-6 text-white" />
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-400">
-                            <Users className="w-3 h-3" />
-                            <span>0 active</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Content */}
-                <div className="mb-6">
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors line-clamp-1">
-                        {title}
-                    </h3>
-                    <p className="text-gray-400 text-sm line-clamp-2 leading-relaxed min-h-[2.5rem]">
-                        {description || "No description provided."}
-                    </p>
-                </div>
-
-                {/* Footer */}
-                <div className="space-y-3">
-                    {/* Activity Info */}
-                    <div className="flex items-center gap-2 text-xs">
-                        <activity.icon className={`w-3 h-3 ${activity.color}`} />
-                        <span className={activity.color}>{activity.text}</span>
-                        <span className="text-gray-600">at {activity.time}</span>
-                    </div>
-                    
-                    {/* Room ID & Action */}
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-700/50">
-                        <div className="text-xs text-gray-600 font-mono">
-                            #{id.toString().padStart(4, '0')}
-                        </div>
-                        
-                        <div className="flex items-center gap-2">
-                            <div className="text-xs text-blue-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                {isAdmin ? "Manage Room" : "Join Room"}
-                            </div>
-                            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-blue-400 transition-colors opacity-0 group-hover:opacity-100" />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Hover Gradient Effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 to-purple-600/0 group-hover:from-blue-600/5 group-hover:to-purple-600/5 rounded-2xl transition-all duration-300 pointer-events-none" />
-                
-                {/* Admin Border Effect */}
-                {isAdmin && (
-                    <div className="absolute inset-0 border-2 border-amber-500/20 rounded-2xl pointer-events-none" />
-                )}
+  return (
+    <Link href={`/canvas/${id}`} className="group block">
+      <div className="relative bg-gray-900/80 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 transition-all duration-300 hover:border-gray-600 hover:bg-gray-900/90 hover:shadow-2xl hover:shadow-blue-500/10 transform hover:-translate-y-1">
+        <div className="absolute top-4 right-4 flex items-center gap-2">
+          {isAdmin && (
+            <div className="flex items-center gap-1 bg-amber-500/20 text-amber-400 px-2 py-1 rounded-full text-xs font-medium">
+              <Crown className="w-3 h-3" />
+              <span>Admin</span>
             </div>
-        </Link>
-    );
+          )}
+          {isRecentlyUpdated && (
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          )}
+        </div>
+
+        <div className="flex items-start justify-between mb-4 pr-16">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+              {getIcon(icon)}
+            </div>
+            <div className="flex items-center gap-2 text-xs text-gray-400">
+              <Users className="w-3 h-3" />
+              <span>0 active</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors line-clamp-1">
+            {title}
+          </h3>
+          <p className="text-gray-400 text-sm line-clamp-2 leading-relaxed min-h-[2.5rem]">
+            {description || "No description provided."}
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-xs">
+            <activity.icon className={`w-3 h-3 ${activity.color}`} />
+            <span className={activity.color}>{activity.text}</span>
+            <span className="text-gray-600">at {activity.time}</span>
+          </div>
+
+          <div className="flex items-center justify-between pt-3 border-t border-gray-700/50">
+            <div className="text-xs text-gray-600 font-mono">
+              #{id.toString().padStart(4, "0")}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="text-xs text-blue-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                {isAdmin ? "Manage Room" : "Join Room"}
+              </div>
+              <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-blue-400 transition-colors opacity-0 group-hover:opacity-100" />
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/0 to-purple-600/0 group-hover:from-blue-600/5 group-hover:to-purple-600/5 rounded-2xl transition-all duration-300 pointer-events-none" />
+
+        {isAdmin && (
+          <div className="absolute inset-0 border-2 border-amber-500/20 rounded-2xl pointer-events-none" />
+        )}
+      </div>
+    </Link>
+  );
 }

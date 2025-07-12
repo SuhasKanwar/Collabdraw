@@ -82,12 +82,8 @@ export default function Rooms() {
 
   return (
     <div className="container mx-auto px-4 py-12 min-h-screen">
-      {/* Header Section */}
       <div className="mb-12">
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl">
-            <Palette className="w-8 h-8 text-white" />
-          </div>
           <div>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
               Your Rooms
@@ -98,7 +94,6 @@ export default function Rooms() {
           </div>
         </div>
 
-        {/* Stats Row */}
         {!loading && rooms.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <div className="bg-gray-900/60 backdrop-blur-sm border border-gray-700 rounded-xl p-4">
@@ -138,7 +133,6 @@ export default function Rooms() {
           </div>
         )}
         
-        {/* Search and Filters */}
         {!loading && rooms.length > 0 && (
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-8">
             <div className="flex flex-col sm:flex-row gap-3 flex-1">
@@ -177,7 +171,6 @@ export default function Rooms() {
         )}
       </div>
 
-      {/* Content Section */}
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[...Array(8)].map((_, index) => (
@@ -211,6 +204,7 @@ export default function Rooms() {
                 updatedAt={room.updatedAt}
                 adminId={room.adminId}
                 currentUserId={currentUserId}
+                icon={room.icon}
               />
             ))}
           </div>
