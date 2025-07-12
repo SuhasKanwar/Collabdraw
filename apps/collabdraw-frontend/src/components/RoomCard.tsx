@@ -1,18 +1,12 @@
 "use client";
 
-import {
-  Users,
-  Calendar,
-  ArrowRight,
-  Crown,
-  Edit3,
-  Home
-} from "lucide-react";
-import Link from "next/link";
+import { Calendar, ArrowRight, Crown, Edit3, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { iconMap } from "@/types/icons";
 import ConfirmationModal from "./ConfirmationModal";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 
 interface RoomCardProps {
   id: number;
@@ -102,9 +96,20 @@ export default function RoomCard(props: RoomCardProps) {
     setShowConfirmation(true);
   };
 
-  const handleConfirmEnter = () => {
-    router.push(`/canvas/${id}`);
-    setShowConfirmation(false);
+  const handleConfirmEnter = async () => {
+    const response = await api.post("/api/room/join", {
+      slug: slug
+    });
+    if (response.status === 200) {
+      router.push(`/canvas/${id}`);
+      setShowConfirmation(false);
+      toast.success(`Entered room "${slug}" successfully!`);
+      return;
+    } else {
+      toast.error(`Failed to enter room "${slug}": ${response.data.error}`);
+      setShowConfirmation(false);
+      return;
+    }
   };
 
   return (

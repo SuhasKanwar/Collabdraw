@@ -25,6 +25,7 @@ async function getRooms() {
   try {
     const response = await api.get("/api/room/rooms");
     if (response.status == 200) {
+      toast.success("Rooms fetched successfully");
       return {
         rooms: response.data.rooms,
         currentUserId: response.data.currentUserId,
