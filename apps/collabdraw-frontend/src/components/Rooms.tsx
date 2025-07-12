@@ -7,7 +7,17 @@ import JoinRoomDialog from "./JoinRoomDialog";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
-import { Plus, Palette, Crown, Users, Search, Filter, TrendingUp, UserPlus } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Plus,
+  Palette,
+  Crown,
+  Users,
+  Search,
+  Filter,
+  TrendingUp,
+  UserPlus,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -17,12 +27,12 @@ async function getRooms() {
     if (response.status == 200) {
       return {
         rooms: response.data.rooms,
-        currentUserId: response.data.currentUserId
+        currentUserId: response.data.currentUserId,
       };
     } else {
       return {
         rooms: [],
-        currentUserId: null
+        currentUserId: null,
       };
     }
   } catch (error: any) {
@@ -35,7 +45,9 @@ export default function Rooms() {
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState<"all" | "owned" | "recent">("all");
+  const [filterType, setFilterType] = useState<"all" | "owned" | "recent">(
+    "all"
+  );
 
   useEffect(() => {
     getRooms()
@@ -52,32 +64,37 @@ export default function Rooms() {
   }, []);
 
   const handleRoomCreated = (newRoom: Room) => {
-    setRooms(prevRooms => [...prevRooms, newRoom]);
+    setRooms((prevRooms) => [...prevRooms, newRoom]);
   };
 
   const handleRoomJoined = (newRoom: Room) => {
-    setRooms(prevRooms => [...prevRooms, newRoom]);
+    setRooms((prevRooms) => [...prevRooms, newRoom]);
   };
 
-  const filteredRooms = rooms.filter(room => {
-    const matchesSearch = (room.title?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-                         (room.description?.toLowerCase() || '').includes(searchTerm.toLowerCase());
-    
+  const filteredRooms = rooms.filter((room) => {
+    const matchesSearch =
+      (room.title?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+      (room.description?.toLowerCase() || "").includes(
+        searchTerm.toLowerCase()
+      );
+
     switch (filterType) {
       case "owned":
         return matchesSearch && room.adminId === currentUserId;
       case "recent":
         const weekAgo = new Date();
         weekAgo.setDate(weekAgo.getDate() - 7);
-        return matchesSearch && new Date(room.joinedAt || room.createdAt) > weekAgo;
+        return (
+          matchesSearch && new Date(room.joinedAt || room.createdAt) > weekAgo
+        );
       default:
         return matchesSearch;
     }
   });
 
   const getStats = () => {
-    const ownedRooms = rooms.filter(room => room.adminId === currentUserId);
-    const recentlyUpdated = rooms.filter(room => {
+    const ownedRooms = rooms.filter((room) => room.adminId === currentUserId);
+    const recentlyUpdated = rooms.filter((room) => {
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
       return new Date(room.joinedAt || room.createdAt) > weekAgo;
@@ -86,7 +103,7 @@ export default function Rooms() {
     return {
       total: rooms.length,
       owned: ownedRooms.length,
-      recent: recentlyUpdated.length
+      recent: recentlyUpdated.length,
     };
   };
 
@@ -112,37 +129,43 @@ export default function Rooms() {
               <div className="flex items-center gap-3">
                 <Users className="w-5 h-5 text-blue-400" />
                 <div>
-                  <div className="text-2xl font-bold text-white">{stats.total}</div>
+                  <div className="text-2xl font-bold text-white">
+                    {stats.total}
+                  </div>
                   <div className="text-sm text-gray-400">Total Rooms</div>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-900/60 backdrop-blur-sm border border-gray-700 rounded-xl p-4">
               <div className="flex items-center gap-3">
                 <Crown className="w-5 h-5 text-amber-400" />
                 <div>
-                  <div className="text-2xl font-bold text-white">{stats.owned}</div>
+                  <div className="text-2xl font-bold text-white">
+                    {stats.owned}
+                  </div>
                   <div className="text-sm text-gray-400">Owned by You</div>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-900/60 backdrop-blur-sm border border-gray-700 rounded-xl p-4">
               <div className="flex items-center gap-3">
                 <TrendingUp className="w-5 h-5 text-green-400" />
                 <div>
-                  <div className="text-2xl font-bold text-white">{stats.recent}</div>
+                  <div className="text-2xl font-bold text-white">
+                    {stats.recent}
+                  </div>
                   <div className="text-sm text-gray-400">Recent Activity</div>
                 </div>
               </div>
             </div>
-            
+
             <CreateRoomDialog onRoomCreated={handleRoomCreated} />
             <JoinRoomDialog onRoomJoined={handleRoomJoined} />
-        </div>
+          </div>
         )}
-        
+
         {!loading && rooms.length > 0 && (
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-8">
             <div className="flex flex-col sm:flex-row gap-3 flex-1">
@@ -156,19 +179,25 @@ export default function Rooms() {
                   className="pl-10 bg-gray-900/60 border-gray-700 text-white placeholder-gray-400 w-full sm:w-64"
                 />
               </div>
-              
+
               <div className="flex gap-2">
                 {[
                   { key: "all", label: "All Rooms", count: stats.total },
                   { key: "owned", label: "Owned", count: stats.owned },
-                  { key: "recent", label: "Recent", count: stats.recent }
-                ].map(filter => (
+                  { key: "recent", label: "Recent", count: stats.recent },
+                ].map((filter) => (
                   <Button
                     key={filter.key}
-                    variant={filterType === filter.key ? "default" : "secondary"}
+                    variant={
+                      filterType === filter.key ? "default" : "outline"
+                    }
                     size="sm"
                     onClick={() => setFilterType(filter.key as any)}
-                    className={filterType === filter.key ? "bg-blue-600" : "bg-gray-800 hover:bg-gray-700"}
+                    className={
+                      filterType === filter.key
+                        ? "bg-gray-700 hover:bg-gray-600 text-white px-6 border border-gray-600/50"
+                        : "text-white border-gray-600/50 hover:text-white hover:bg-gray-700/70 hover:border-gray-500 bg-transparent"
+                    }
                   >
                     {filter.label} ({filter.count})
                   </Button>
@@ -180,18 +209,62 @@ export default function Rooms() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {[...Array(8)].map((_, index) => (
-            <div
-              key={index}
-              className="bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-6 animate-pulse"
-            >
-              <div className="h-4 bg-gray-700 rounded mb-4"></div>
-              <div className="h-3 bg-gray-700 rounded mb-2"></div>
-              <div className="h-3 bg-gray-700 rounded w-2/3 mb-4"></div>
-              <div className="h-8 bg-gray-700 rounded"></div>
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {[...Array(5)].map((_, index) => (
+              <div
+                key={index}
+                className="bg-gray-900/60 backdrop-blur-sm border border-gray-700 rounded-xl p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <Skeleton className="w-5 h-5 bg-gray-700" />
+                  <div className="flex-1">
+                    <Skeleton className="h-6 w-8 bg-gray-700 mb-1" />
+                    <Skeleton className="h-4 w-16 bg-gray-700" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <div className="flex flex-col sm:flex-row gap-3 flex-1">
+              <Skeleton className="h-10 w-full sm:w-64 bg-gray-800" />
+              <div className="flex gap-2">
+                {[...Array(3)].map((_, index) => (
+                  <Skeleton key={index} className="h-8 w-20 bg-gray-800" />
+                ))}
+              </div>
             </div>
-          ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, index) => (
+              <div
+                key={index}
+                className="bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700 p-6"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="w-12 h-12 rounded-xl bg-gray-700" />
+                  </div>
+                  <Skeleton className="w-16 h-6 rounded-full bg-gray-700" />
+                </div>
+                <div className="mb-6">
+                  <Skeleton className="h-6 w-3/4 bg-gray-700 mb-3" />
+                  <Skeleton className="h-4 w-full bg-gray-700 mb-2" />
+                  <Skeleton className="h-4 w-2/3 bg-gray-700" />
+                </div>
+                <div className="space-y-3">
+                  <Skeleton className="h-4 w-1/2 bg-gray-700" />
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-700/50">
+                    <Skeleton className="h-3 w-12 bg-gray-700" />
+                    <Skeleton className="h-4 w-16 bg-gray-700" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ) : filteredRooms.length > 0 ? (
         <>
@@ -221,16 +294,18 @@ export default function Rooms() {
         <div className="text-center py-20">
           <div className="max-w-md mx-auto">
             <Filter className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-white mb-2">No rooms found</h3>
+            <h3 className="text-xl font-bold text-white mb-2">
+              No rooms found
+            </h3>
             <p className="text-gray-400 mb-6">
               Try adjusting your search or filter criteria.
             </p>
-            <button 
+            <button
               onClick={() => {
                 setSearchTerm("");
                 setFilterType("all");
               }}
-              className="text-blue-400 hover:text-blue-300 font-medium"
+              className="text-gray-400 hover:text-gray-300 font-medium"
             >
               Clear filters
             </button>
@@ -242,27 +317,29 @@ export default function Rooms() {
             <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center mb-6 mx-auto">
               <Palette className="w-12 h-12 text-gray-600" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4">
-              No rooms yet
-            </h3>
+            <h3 className="text-2xl font-bold text-white mb-4">No rooms yet</h3>
             <p className="text-gray-400 mb-8">
-              Get started by creating your first collaborative room or join an existing one with a room slug.
+              Get started by creating your first collaborative room or join an
+              existing one with a room slug.
             </p>
             <div className="flex gap-4 justify-center">
-              <CreateRoomDialog 
+              <CreateRoomDialog
                 onRoomCreated={handleRoomCreated}
                 trigger={
-                  <Button className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 text-white border-gray-600/50 hover:text-white hover:bg-gray-700/70 hover:border-gray-500 cursor-pointer bg-transparent"
+                  >
                     <Plus className="w-5 h-5" />
                     Create Room
                   </Button>
                 }
               />
-              
-              <JoinRoomDialog 
+
+              <JoinRoomDialog
                 onRoomJoined={handleRoomJoined}
                 trigger={
-                  <Button variant="outline" className="flex items-center gap-2 border-gray-600 text-gray-300 hover:bg-gray-800">
+                  <Button className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white border border-gray-600/50">
                     <UserPlus className="w-5 h-5" />
                     Join Room
                   </Button>

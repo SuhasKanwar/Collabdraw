@@ -46,7 +46,10 @@ export default function CreateRoomDialog({ onRoomCreated, trigger }: CreateRoomD
   };
 
   const defaultTrigger = (
-    <Button className="flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-6 cursor-pointer border border-gray-600/50">
+    <Button
+        className="flex items-center justify-center gap-2 text-white border-gray-600/50 hover:text-white hover:bg-gray-700/70 hover:border-gray-500 cursor-pointer bg-transparent"
+        variant="outline"
+    >
       <Plus className="w-5 h-5" />
       Create Room
     </Button>
@@ -111,7 +114,7 @@ export default function CreateRoomDialog({ onRoomCreated, trigger }: CreateRoomD
                   onClick={() => setCreateForm({ ...createForm, icon: option.value })}
                   className={`flex items-center gap-2 p-2 rounded-lg border transition-colors ${
                     createForm.icon === option.value
-                      ? 'border-blue-500 bg-blue-500/20'
+                      ? 'border-gray-500 bg-gray-500/20'
                       : 'border-gray-600 hover:border-gray-500'
                   }`}
                 >
@@ -134,7 +137,7 @@ export default function CreateRoomDialog({ onRoomCreated, trigger }: CreateRoomD
             <Button
               type="submit"
               disabled={submitting}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800"
+              className="flex-1 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-800"
             >
               {submitting ? "Creating..." : "Create Room"}
             </Button>
