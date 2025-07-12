@@ -21,7 +21,8 @@ export const createRoomHandler = async (req: Request, res: Response): Promise<vo
                 slug: parsedData.data.slug,
                 adminId: userId,
                 title: parsedData.data.title,
-                description: parsedData.data.description
+                description: parsedData.data.description,
+                icon: parsedData.data.icon
             }
         });
 
