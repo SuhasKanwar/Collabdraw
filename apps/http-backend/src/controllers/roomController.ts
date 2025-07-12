@@ -26,20 +26,18 @@ export const createRoomHandler = async (req: Request, res: Response): Promise<vo
             }
         });
 
-        await prismaClient.userRoomMapping.create({
+        const userRoom = await prismaClient.userRoomMapping.create({
             data: {
                 userId: userId,
                 roomId: room.id
             }
         });
 
+        room.joinedAt = userRoom.joinedAt;
+
         res.status(201).json({
             message: 'Room created successfully',
-            room: {
-                id: room.id,
-                slug: room.slug,
-                adminId: room.adminId
-            }
+            room: room
         });
         return;
     }
@@ -48,6 +46,56 @@ export const createRoomHandler = async (req: Request, res: Response): Promise<vo
             res.status(409).json({ error: 'Room already exists' });
             return;
         }
+        res.status(500).json({ error: 'Internal server error' });
+        return;
+    }
+}
+
+export const joinRoomHandler = async (req: Request, res: Response): Promise<void> => {
+    const { slug } = req.body;
+    if (!slug) {
+        res.status(400).json({ error: 'Room slug is required' });
+        return;
+    }
+    try {
+        const userId = req.userId;
+
+        const room = await prismaClient.room.findFirst({
+            where: { slug: slug }
+        });
+
+        if (!room) {
+            res.status(404).json({ error: 'Room not found' });
+            return;
+        }
+
+        const userRoomsWithDetails = await prismaClient.userRoomMapping.upsert({
+            where: {
+                userId_roomId: {
+                    userId: userId,
+                    roomId: room.id
+                }
+            },
+            update: {
+                joinedAt: new Date()
+            },
+            create: {
+                userId: userId,
+                roomId: room.id,
+                joinedAt: new Date()
+            }
+        });
+
+        room.joinedAt = userRoomsWithDetails.joinedAt;
+
+        res.status(200).json({
+            message: 'Joined room successfully',
+            room: room,
+            currentUserId: userId
+        });
+        return;
+    }
+    catch (e) {
         res.status(500).json({ error: 'Internal server error' });
         return;
     }
@@ -147,27 +195,22 @@ export const getAllRoomsHandler = async (req: Request, res: Response): Promise<v
         return;
     }
     try {
-        const userRooms = await prismaClient.userRoomMapping.findMany({
+        const userRoomsWithDetails = await prismaClient.userRoomMapping.findMany({
             where: {
                 userId: userId
+            },
+            include: {
+                room: true
             },
             orderBy: {
                 joinedAt: 'desc'
             }
         });
 
-        const roomIds = userRooms.map((mapping: { roomId: number }) => mapping.roomId);
-
-        const rooms = await prismaClient.room.findMany({
-            where: {
-                id: {
-                    in: roomIds
-                }
-            },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        });
+        const rooms = userRoomsWithDetails.map((mapping: { room: any; joinedAt: any }) => ({
+            ...mapping.room,
+            joinedAt: mapping.joinedAt
+        }));
 
         res.status(200).json({
             message: 'Rooms fetched successfully',
