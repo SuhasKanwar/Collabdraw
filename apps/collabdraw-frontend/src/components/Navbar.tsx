@@ -48,7 +48,7 @@ const Navbar = () => {
         >
           <Logo />
           <span className="text-2xl font-bold text-white">
-            CollabDraw
+            Collabdraw
           </span>
         </Link>
         <NavItems items={NAV_ITEMS} className="text-gray-300 hover:text-white" />

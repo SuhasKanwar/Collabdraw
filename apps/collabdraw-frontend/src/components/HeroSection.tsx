@@ -167,8 +167,7 @@ export default function HeroSection() {
           <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Collabdraw is your digital studio for real-time collaborative art.
             Sketch, paint, and design together—whether you're brainstorming,
-            teaching, or just having fun. Experience seamless teamwork, infinite
-            canvas, and instant sharing.
+            teaching, or just having fun.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 text-sm">
@@ -193,7 +192,7 @@ export default function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Button
               size="lg"
-              className="bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white px-8 py-3 text-lg font-semibold shadow-xl hover:shadow-2xl transform hover:scale-101 transition-all duration-200"
+              className="bg-gray-700 hover:bg-gray-600 text-white px-6 cursor-pointer border border-gray-600/50 py-3 text-lg font-semibold shadow-xl hover:shadow-2xl transform hover:scale-101 transition-all duration-200"
             >
               Start Drawing
             </Button>

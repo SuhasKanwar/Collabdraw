@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { useAuth } from "@/providers/AuthProvider";
-import Logo from "./Logo";
+import Logo from "@/components/Logo";
 
 function handleComingSoon() {
   toast.info("This service is not available currently.");
@@ -177,7 +177,7 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
           <div className="inline-flex items-center gap-2 mb-4">
             <Logo />
             <h1 className="text-2xl font-bold text-gray-200">
-              CollabDraw
+              Collabdraw
             </h1>
           </div>
           <p className="text-gray-400 text-sm">
@@ -187,7 +187,7 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
         <Card className="bg-gray-900/40 backdrop-blur-sm border-gray-700/30 shadow-xl">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-gray-100">
-              {isSignUp ? "Join CollabDraw" : "Welcome Back"}
+              {isSignUp ? "Join Collabdraw" : "Welcome Back"}
             </CardTitle>
             <CardDescription className="text-gray-400">
               {isSignUp
