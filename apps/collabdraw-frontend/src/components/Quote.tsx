@@ -1,8 +1,8 @@
 import { PointerHighlight } from "@/components/ui/pointer-highlight";
 
-export function Quote() {
+export default function Quote() {
   return (
-    <div className="mx-auto py-52 text-2xl font-bold tracking-tight md:text-4xl">
+    <div className="max-w-[80vw] text-center mx-auto my-72 text-6xl font-bold tracking-tight md:text-8xl">
       Great ideas become extraordinary when we
       <PointerHighlight
         rectangleClassName="bg-blue-900 border-blue-700 leading-loose"

@@ -9,6 +9,7 @@ import {
   Lock,
 } from "lucide-react";
 import { motion, type Variants } from "motion/react";
+import { useState } from "react";
 
 const featuresData = [
   {
@@ -146,6 +147,10 @@ const featuresData = [
 ];
 
 export default function Features() {
+  const [activeTools, setActiveTools] = useState<{ [key: number]: string }>({
+    2: "Brush"
+  });
+
   const containerVariants: Variants = {
     hidden: {},
     visible: {
@@ -155,7 +160,14 @@ export default function Features() {
     },
   };
 
-  const renderMockup = (mockup: any) => {
+  const handleToolClick = (featureId: number, toolName: string) => {
+    setActiveTools((prev) => ({
+      ...prev,
+      [featureId]: toolName,
+    }));
+  };
+
+  const renderMockup = (mockup: any, featureId?: number) => {
     switch (mockup.type) {
       case "chat":
         return (
@@ -232,16 +244,19 @@ export default function Features() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 {mockup.tools.map((tool: any, idx: number) => (
-                  <div
+                  <button
                     key={idx}
-                    className={`p-3 rounded-lg border transition-colors ${
-                      tool.active
-                        ? "bg-blue-600 border-blue-500 text-white"
-                        : "bg-gray-800 border-gray-600 text-gray-300 hover:border-gray-500"
+                    onClick={() =>
+                      featureId && handleToolClick(featureId, tool.name)
+                    }
+                    className={`p-3 rounded-lg border transition-all duration-200 transform hover:scale-101 ${
+                      activeTools[featureId || 2] === tool.name
+                        ? "bg-blue-600 border-blue-500 text-white shadow-lg"
+                        : "bg-gray-800 border-gray-600 text-gray-300 hover:border-gray-500 hover:bg-gray-700"
                     }`}
                   >
                     {tool.name}
-                  </div>
+                  </button>
                 ))}
               </div>
               <div className="pt-4">
@@ -441,11 +456,11 @@ export default function Features() {
                   }}
                   viewport={{ once: false, amount: 0.3 }}
                   whileHover={{
-                    scale: 1.02,
+                    scale: 1.01,
                     transition: { duration: 0.3 },
                   }}
                 >
-                  {renderMockup(feature.mockup)}
+                  {renderMockup(feature.mockup, feature.id)}
                 </motion.div>
               </div>
             </motion.div>
