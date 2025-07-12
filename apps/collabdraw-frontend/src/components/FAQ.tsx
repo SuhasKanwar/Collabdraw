@@ -38,7 +38,7 @@ const faqData = [
 
 export default function FAQ() {
   return (
-    <section className="py-20">
+    <section className="py-20" id="faqs">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-gray-800/80 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium text-gray-200 shadow-lg border border-gray-700 mb-4">

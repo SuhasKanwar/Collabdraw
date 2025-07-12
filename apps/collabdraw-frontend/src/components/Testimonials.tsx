@@ -135,7 +135,7 @@ export default function Testimonials() {
   };
 
   return (
-    <div className="py-20">
+    <div className="py-20" id="testimonials">
       <div className="max-w-[80vw] mx-auto px-4">
         <div className="flex justify-between items-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold text-white">

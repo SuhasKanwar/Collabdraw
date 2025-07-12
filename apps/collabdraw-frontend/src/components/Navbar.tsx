@@ -20,8 +20,8 @@ import { api } from "@/lib/api";
 
 const NAV_ITEMS = [
   { name: "Features", link: "/#features" },
-  { name: "Benefits", link: "/#benefits" },
   { name: "Testimonials", link: "/#testimonials" },
+  { name: "FAQs", link: "/#faqs" },
 ];
 
 const Navbar = () => {

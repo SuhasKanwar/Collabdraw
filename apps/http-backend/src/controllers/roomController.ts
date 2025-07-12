@@ -170,7 +170,8 @@ export const getAllRoomsHandler = async (req: Request, res: Response): Promise<v
 
         res.status(200).json({
             message: 'Rooms fetched successfully',
-            rooms: rooms
+            rooms: rooms,
+            currentUserId: userId
         });
         return;
     }

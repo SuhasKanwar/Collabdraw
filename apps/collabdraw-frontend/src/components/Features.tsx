@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Check,
   MessageCircle,
@@ -325,7 +326,7 @@ export default function Features() {
   };
 
   return (
-    <section className="container mx-auto py-20 px-4">
+    <section className="container mx-auto py-20 px-4" id="features">
       <motion.div
         className="text-center mb-20"
         initial={{ opacity: 0, y: 50 }}
