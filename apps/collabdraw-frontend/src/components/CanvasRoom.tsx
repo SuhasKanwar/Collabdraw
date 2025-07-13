@@ -1,26 +1,13 @@
 "use client";
 
-import { WS_BACKEND_URL } from "@/config";
-import { useEffect, useState } from "react";
+import { useSocket } from "@/hooks/useSocket";
 import CanvasClient from "./CanvasClient";
-import { useAuth } from "@/providers/AuthProvider";
 import Loading from "@/app/loading";
 
 export default function CanvasRoom({ roomId }: { roomId: string }) {
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  const { token } = useAuth();
+  const { socket, loading } = useSocket(roomId);
 
-  useEffect(() => {
-    if (!token) return;
-    const ws = new WebSocket(`${WS_BACKEND_URL}?token=${token}`);
-    ws.onopen = () => {
-      setSocket(ws);
-      ws.send(JSON.stringify({ type: "join_room", roomId }));
-    };
-    return () => ws.close();
-  }, [token, roomId]);
-
-  if (!socket) {
+  if (loading || !socket) {
     return <Loading />;
   }
 
