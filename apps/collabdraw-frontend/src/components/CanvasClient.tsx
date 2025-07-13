@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import ToolBar from "./ToolBar";
 import { Draw } from "@/utils/draw";
 import { Tool } from "@/types/tools";
@@ -15,6 +17,7 @@ export default function CanvasClient({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [draw, setDraw] = useState<Draw>();
   const [selectedTool, setSelectedTool] = useState<Tool>(Tool.Pencil);
+  const router = useRouter();
 
   const [textInput, setTextInput] = useState<{
     visible: boolean;
@@ -64,8 +67,22 @@ export default function CanvasClient({
     setTextInput(prev => ({ ...prev, visible: false, value: "" }));
   };
 
+  const handleBackToDashboard = () => {
+    router.push('/dashboard');
+  };
+
   return (
     <div className="h-screen overflow-hidden relative">
+      <div className="fixed top-6 left-6 z-50">
+        <button
+          onClick={handleBackToDashboard}
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-900 hover:bg-neutral-800 transition-colors border border-neutral-700"
+          title="Back to Dashboard"
+        >
+          <ArrowLeft className="h-6 w-6 text-neutral-300" />
+        </button>
+      </div>
+
       <canvas
         ref={canvasRef}
         width={window.innerWidth}

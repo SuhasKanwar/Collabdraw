@@ -116,7 +116,7 @@ export class Draw {
 
         if (this.selectedTool === Tool.Pencil || this.selectedTool === Tool.Eraser) {
             this.currentPath.push({ x, y });
-            this.clearCanvas();  // redraw history
+            this.clearCanvas();
             if (this.selectedTool === Tool.Pencil) {
                 this.ctx.globalCompositeOperation = "source-over";
                 this.ctx.strokeStyle = "rgba(255,255,255)";
