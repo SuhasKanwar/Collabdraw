@@ -125,7 +125,27 @@ a, button {
   cursor: pointer;
 }
 
-/* Enhanced page-level scrollbar styling using layout colors */
+/* .custom-cursor {
+  cursor: url('/cursor.svg'), auto;
+}
+
+.custom-cursor * {
+  cursor: inherit;
+}
+
+.custom-cursor a,
+.custom-cursor button {
+  cursor: url('/cursor-pointer.svg'), pointer;
+}
+
+.eraser-cursor {
+  cursor: url('/eraser.svg'), auto;
+}
+
+.eraser-cursor * {
+  cursor: inherit;
+} */
+
 ::-webkit-scrollbar {
   width: 14px;
   height: 14px;

@@ -10,7 +10,7 @@ export class Draw {
     private clicked: boolean;
     private startX: number = 0;
     private startY: number = 0;
-    private selectedTool: Tool = Tool.Pencil;
+    private selectedTool: Tool | null = null;
     private currentPath: { x: number; y: number }[] = [];
     private offsetX: number = 0;
     private offsetY: number = 0;
@@ -35,6 +35,7 @@ export class Draw {
 
     async init() {
         this.existingShapes = await getExistingShapes(this.roomId);
+        this.clearCanvas();
     }
 
     destroy() {
@@ -48,7 +49,16 @@ export class Draw {
         this.selectedTool = tool;
         if (tool === Tool.Hand) {
             this.canvas.style.cursor = "grab";
-        } else {
+        } else if (tool === Tool.Text) {
+            this.canvas.style.cursor = "text";
+        }
+        // else if (tool === Tool.Eraser) {
+        //     this.canvas.style.cursor = "url(/eraser.svg), auto";
+        // } 
+        // else {
+        //     this.canvas.style.cursor = "url('/cursor.svg'), crosshair";
+        // }
+        else {
             this.canvas.style.cursor = "crosshair";
         }
         this.clearCanvas();

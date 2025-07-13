@@ -35,7 +35,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} overflow-x-hidden text-white`}>
+      <body className={`${inter.className} overflow-x-hidden text-white custom-cursor`}>
         <main className="bg-gradient-to-br from-gray-900 via-slate-950 to-gray-900">
           <AuthProvider>{children}</AuthProvider>
         </main>
