@@ -65,7 +65,7 @@ export default function JoinRoomDialog({ onRoomJoined, trigger }: JoinRoomDialog
           </DialogHeader>
           
           <form onSubmit={handleJoinRoom} className="space-y-4">
-            <div>
+            <div className="space-y-4">
               <Label htmlFor="joinSlug" className="text-gray-300">Room Slug</Label>
               <Input
                 id="joinSlug"
@@ -86,7 +86,7 @@ export default function JoinRoomDialog({ onRoomJoined, trigger }: JoinRoomDialog
                 type="button"
                 variant="outline"
                 onClick={() => setShowDialog(false)}
-                className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800"
+                className="flex-1 text-white border-gray-600/50 hover:bg-gray-700/70 bg-transparent hover:text-white"
               >
                 Cancel
               </Button>

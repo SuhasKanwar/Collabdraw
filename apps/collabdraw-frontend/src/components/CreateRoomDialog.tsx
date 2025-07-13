@@ -66,7 +66,7 @@ export default function CreateRoomDialog({ onRoomCreated, trigger }: CreateRoomD
         </DialogHeader>
         
         <form onSubmit={handleCreateRoom} className="space-y-4">
-          <div>
+          <div className="space-y-3">
             <Label htmlFor="title" className="text-gray-300">Room Title</Label>
             <Input
               id="title"
@@ -79,7 +79,7 @@ export default function CreateRoomDialog({ onRoomCreated, trigger }: CreateRoomD
             />
           </div>
           
-          <div>
+          <div className="space-y-3">
             <Label htmlFor="slug" className="text-gray-300">Room Slug</Label>
             <Input
               id="slug"
@@ -92,7 +92,7 @@ export default function CreateRoomDialog({ onRoomCreated, trigger }: CreateRoomD
             />
           </div>
           
-          <div>
+          <div className="space-y-3">
             <Label htmlFor="description" className="text-gray-300">Description</Label>
             <Textarea
               id="description"
@@ -104,7 +104,7 @@ export default function CreateRoomDialog({ onRoomCreated, trigger }: CreateRoomD
             />
           </div>
           
-          <div>
+          <div className="space-y-3">
             <Label className="text-gray-300">Icon</Label>
             <div className="grid grid-cols-3 gap-2 mt-2">
               {iconOptions.map((option) => (
@@ -130,7 +130,7 @@ export default function CreateRoomDialog({ onRoomCreated, trigger }: CreateRoomD
               type="button"
               variant="outline"
               onClick={() => setShowDialog(false)}
-              className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800"
+              className="flex-1 text-white border-gray-600/50 hover:bg-gray-700/70 bg-transparent hover:text-white"
             >
               Cancel
             </Button>

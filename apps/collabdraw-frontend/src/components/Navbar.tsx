@@ -119,7 +119,7 @@ const Navbar = () => {
                 <Link href="/dashboard">
                   <Button
                     variant="outline"
-                    className="w-full text-white border-gray-600/50 hover:text-white hover:bg-gray-700/70 cursor-pointer bg-transparent"
+                    className="w-full text-white border-gray-600/50 hover:bg-gray-700/70 cursor-pointer bg-transparent"
                   >
                     Dashboard
                   </Button>
