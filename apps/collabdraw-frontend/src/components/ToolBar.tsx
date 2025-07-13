@@ -7,7 +7,7 @@ import {
   RectangleHorizontal,
   Circle,
   Type,
-  ArrowUpRight, // <-- added
+  ArrowUpRight,
 } from "lucide-react";
 import { Tool } from "@/types/tools";
 

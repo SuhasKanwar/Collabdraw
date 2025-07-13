@@ -26,7 +26,9 @@ wss.on('connection', (ws, request) => {
     }
     const queryParams = new URLSearchParams(url.split('?')[1]);
     const token = queryParams.get('token') || '';
-    const authenticatedUserId = authenticate(token);
+    const decodedToken = authenticate(token);
+    const authenticatedUserId = decodedToken?.userId;
+    const authenticatedUserName = decodedToken?.name;
     if(!authenticatedUserId) {
         ws.close();
         return;
@@ -72,7 +74,29 @@ wss.on('connection', (ws, request) => {
                 }
             });
         }
-    })
+        else if (parsedData.type === "chat") {
+            const roomId = parsedData.roomId;
+            const message = parsedData.message;
+
+            const usersInRoom = users.filter(u => u.rooms.includes(roomId));
+            usersInRoom.forEach(u => {
+                u.ws.send(JSON.stringify({
+                    type: 'chat',
+                    message: message,
+                    name: authenticatedUserName,
+                    roomId: roomId
+                }));
+            });
+
+            await prismaClient.chat.create({
+                data: {
+                    roomId: Number(roomId),
+                    userId: authenticatedUserId,
+                    message: message
+                }
+            });
+        }
+    });
 
     ws.on('close', () => {
         const userIndex = users.findIndex(user => user.ws === ws);

@@ -66,6 +66,7 @@ export const signinHandler = async (req: Request, res: Response): Promise<void> 
 
         const token = jwt.sign({
             userId: user?.id,
+            name: user?.name,
         }, JWT_SECRET);
 
         res.cookie('token', token, {

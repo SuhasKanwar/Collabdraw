@@ -8,6 +8,7 @@ export function authenticationMiddleware(req: Request, res: Response, next: Next
         const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
         if(decoded.userId) {
             req.userId = decoded.userId;
+            req.name = decoded.name;
         }
         else {
             res.status(401).json({ message: "Unauthorized" });
