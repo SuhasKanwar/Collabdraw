@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import ToolBar from "./ToolBar";
 import { Draw } from "@/utils/draw";
 import { Tool } from "@/types/tools";
+import ChatBox from "./ChatBox";
 
 export default function CanvasClient({
   roomId,
@@ -110,6 +111,7 @@ export default function CanvasClient({
           }}
         />
       )}
+      <ChatBox roomId={roomId} />
       <ToolBar selectedTool={selectedTool} setSelectedTool={setSelectedTool} />
     </div>
   );

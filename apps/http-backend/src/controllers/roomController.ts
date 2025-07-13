@@ -112,6 +112,13 @@ export const getChatsHandler = async (req: Request, res: Response): Promise<void
             where: {
                 roomId: roomId
             },
+            include: {
+                user: {
+                    select: {
+                        name: true
+                    }
+                }
+            },
             orderBy: {
                 createdAt: 'asc'
             },

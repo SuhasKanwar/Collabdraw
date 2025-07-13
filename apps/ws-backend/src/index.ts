@@ -83,8 +83,12 @@ wss.on('connection', (ws, request) => {
                 u.ws.send(JSON.stringify({
                     type: 'chat',
                     message: message,
-                    name: authenticatedUserName,
-                    roomId: roomId
+                    roomId: roomId,
+                    userId: authenticatedUserId,
+                    user: {
+                        name: authenticatedUserName
+                    },
+                    createdAt: new Date()
                 }));
             });
 
