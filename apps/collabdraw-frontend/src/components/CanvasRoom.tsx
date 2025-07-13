@@ -11,16 +11,13 @@ export default function CanvasRoom({ roomId }: { roomId: string }) {
   const { token } = useAuth();
 
   useEffect(() => {
+    if (!token) return;
     const ws = new WebSocket(`${WS_BACKEND_URL}?token=${token}`);
-
     ws.onopen = () => {
       setSocket(ws);
       ws.send(JSON.stringify({ type: "join_room", roomId }));
     };
-
-    return () => {
-      ws.close();
-    };
+    return () => ws.close();
   }, [token, roomId]);
 
   if (!socket) {

@@ -41,7 +41,7 @@ export class Draw {
         this.canvas.removeEventListener("mousedown", this.mouseDownHandler.bind(this));
         this.canvas.removeEventListener("mouseup", this.mouseUpHandler.bind(this));
         this.canvas.removeEventListener("mousemove", this.mouseMoveHandler.bind(this));
-        this.socket.close();
+        this.canvas.removeEventListener("wheel", this.wheelHandler.bind(this));
     }
 
     setSelectedTool(tool: Tool) {
@@ -94,8 +94,8 @@ export class Draw {
                 this.ctx.lineWidth = 2 / this.scale;
                 this.ctx.strokeStyle = "rgba(255,255,255)";
             } else {
-                this.ctx.globalCompositeOperation = "source-over";    // <-- changed
-                this.ctx.strokeStyle = "rgba(0,0,0)";                  // <-- added
+                this.ctx.globalCompositeOperation = "source-over";
+                this.ctx.strokeStyle = "rgba(0,0,0)";
                 this.ctx.lineWidth = 10 / this.scale;
             }
         }
@@ -122,8 +122,8 @@ export class Draw {
                 this.ctx.strokeStyle = "rgba(255,255,255)";
                 this.ctx.lineWidth = 2 / this.scale;
             } else {
-                this.ctx.globalCompositeOperation = "source-over";    // <-- changed
-                this.ctx.strokeStyle = "rgba(0,0,0)";                  // <-- added
+                this.ctx.globalCompositeOperation = "source-over";
+                this.ctx.strokeStyle = "rgba(0,0,0)";
                 this.ctx.lineWidth = 10 / this.scale;
             }
             this.ctx.beginPath();
