@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MessageCircle, X } from "lucide-react";
 import ToolBar from "./ToolBar";
 import { Draw } from "@/utils/draw";
 import { Tool } from "@/types/tools";
 import ChatBox from "./ChatBox";
+import { motion } from "motion/react";
 
 export default function CanvasClient({
   roomId,
@@ -18,6 +19,7 @@ export default function CanvasClient({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [draw, setDraw] = useState<Draw>();
   const [selectedTool, setSelectedTool] = useState<Tool>(Tool.Pencil);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const router = useRouter();
 
   const [textInput, setTextInput] = useState<{
@@ -58,18 +60,29 @@ export default function CanvasClient({
     const screenX = e.clientX - rect.left;
     const screenY = e.clientY - rect.top;
     const { x: worldX, y: worldY } = draw.screenToWorld(screenX, screenY);
-    setTextInput({ visible: true, screenX, screenY, worldX, worldY, value: "" });
+    setTextInput({
+      visible: true,
+      screenX,
+      screenY,
+      worldX,
+      worldY,
+      value: "",
+    });
   };
 
   const commitText = () => {
     if (draw && textInput.value.trim()) {
       draw.addText(textInput.worldX, textInput.worldY, textInput.value);
     }
-    setTextInput(prev => ({ ...prev, visible: false, value: "" }));
+    setTextInput((prev) => ({ ...prev, visible: false, value: "" }));
   };
 
   const handleBackToDashboard = () => {
-    router.push('/dashboard');
+    router.push("/dashboard");
+  };
+
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
   };
 
   return (
@@ -82,6 +95,35 @@ export default function CanvasClient({
         >
           <ArrowLeft className="h-6 w-6 text-neutral-300" />
         </button>
+      </div>
+
+      <div className="fixed top-6 right-6 z-50">
+        <motion.button
+          onClick={toggleChat}
+          className={`flex h-12 w-12 items-center justify-center rounded-full transition-colors border border-neutral-700 ${
+            isChatOpen
+              ? "bg-blue-600 hover:bg-blue-700"
+              : "bg-neutral-900 hover:bg-neutral-800"
+          }`}
+          title="Toggle Chat"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        >
+          <motion.div
+            key={isChatOpen ? "close" : "open"}
+            initial={{ rotate: -90, opacity: 0 }}
+            animate={{ rotate: 0, opacity: 1 }}
+            exit={{ rotate: 90, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {isChatOpen ? (
+              <X className="h-6 w-6 text-white" />
+            ) : (
+              <MessageCircle className="h-6 w-6 text-neutral-300" />
+            )}
+          </motion.div>
+        </motion.button>
       </div>
 
       <canvas
@@ -107,11 +149,12 @@ export default function CanvasClient({
             color: "#ffffff",
             background: "transparent",
             border: "1px solid #ffffff",
-            outline: "none"
+            outline: "none",
           }}
         />
       )}
-      <ChatBox roomId={roomId} />
+
+      <ChatBox roomId={roomId} isOpen={isChatOpen} />
       <ToolBar selectedTool={selectedTool} setSelectedTool={setSelectedTool} />
     </div>
   );
