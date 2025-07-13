@@ -5,6 +5,7 @@ import { getChats } from "@/utils/chats";
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Send } from "lucide-react";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function ChatBox({ 
     roomId,
@@ -17,6 +18,7 @@ export default function ChatBox({
     const [message, setMessage] = useState("");
     const { loading, socket } = useSocket(roomId);
     const chatContainerRef = useRef<HTMLDivElement>(null);
+    const { user } = useAuth();
 
     useEffect(() => {
         async function fetchChats() {
@@ -50,6 +52,17 @@ export default function ChatBox({
 
     const handleSendMessage = () => {
         if (message.trim() && socket) {
+            setChats((prevChats) => {
+                const newChat: Chat = {
+                    id: Number(Date.now().toString()),
+                    user: { name: "You" },
+                    message: message.trim(),
+                    roomId: roomId,
+                    userId: user.id,
+                    createdAt: new Date()
+                };
+                return [...prevChats, newChat];
+            });
             socket.send(JSON.stringify({
                 type: "chat",
                 roomId: roomId,
@@ -123,7 +136,9 @@ export default function ChatBox({
                                     >
                                         <div className="flex items-center justify-between mb-1">
                                             <div className="text-xs text-neutral-400 font-medium">
-                                                {chat.user.name}
+                                                {
+                                                    chat.userId === user?.id ? "You" : chat.user.name
+                                                }
                                             </div>
                                             <div className="text-xs text-neutral-500">
                                                 {formatDate(chat.createdAt)}

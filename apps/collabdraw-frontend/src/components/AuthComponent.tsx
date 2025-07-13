@@ -22,7 +22,7 @@ function handleComingSoon() {
   toast.info("This service is not available currently.");
 }
 
-async function handleSignIn(formData: FormData, setToken: Function): Promise<boolean> {
+async function handleSignIn(formData: FormData, setToken: Function, setUser: Function): Promise<boolean> {
   const { email, password } = Object.fromEntries(formData.entries());
   try {
     const response = await api.post("/api/auth/signin", {
@@ -34,6 +34,7 @@ async function handleSignIn(formData: FormData, setToken: Function): Promise<boo
       return false;
     }
     setToken(response.data.token);
+    setUser(response.data.user);
     return true;
   } catch (error) {
     if (error instanceof Error) {
@@ -71,7 +72,7 @@ async function handleSignUp(formData: FormData): Promise<boolean> {
 export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { setToken } = useAuth();
+  const { setToken, setUser } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -92,7 +93,7 @@ export default function AuthComponent({ isSignUp }: { isSignUp: boolean }) {
         }, 1000);
       }
     } else {
-      const success = await handleSignIn(formData, setToken);
+      const success = await handleSignIn(formData, setToken, setUser);
       if (success) {
         toast.success("Signed in successfully");
         setTimeout(() => {

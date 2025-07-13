@@ -7,6 +7,7 @@ import ToolBar from "./ToolBar";
 import { Draw } from "@/utils/draw";
 import { Tool } from "@/types/tools";
 import ChatBox from "./ChatBox";
+import ConfirmationModal from "./ConfirmationModal";
 import { motion } from "motion/react";
 
 export default function CanvasClient({
@@ -20,6 +21,7 @@ export default function CanvasClient({
   const [draw, setDraw] = useState<Draw>();
   const [selectedTool, setSelectedTool] = useState<Tool>(Tool.Pencil);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [showExitConfirmation, setShowExitConfirmation] = useState(false);
   const router = useRouter();
 
   const [textInput, setTextInput] = useState<{
@@ -78,6 +80,10 @@ export default function CanvasClient({
   };
 
   const handleBackToDashboard = () => {
+    setShowExitConfirmation(true);
+  };
+
+  const confirmExit = () => {
     router.push("/dashboard");
   };
 
@@ -156,6 +162,17 @@ export default function CanvasClient({
 
       <ChatBox roomId={roomId} isOpen={isChatOpen} />
       <ToolBar selectedTool={selectedTool} setSelectedTool={setSelectedTool} />
+      
+      <ConfirmationModal
+        open={showExitConfirmation}
+        onOpenChange={setShowExitConfirmation}
+        title="Leave Room"
+        description="Are you sure you want to leave this collaboration room? Any unsaved changes will be lost."
+        confirmText="Leave Room"
+        cancelText="Stay"
+        variant="destructive"
+        onConfirm={confirmExit}
+      />
     </div>
   );
 }

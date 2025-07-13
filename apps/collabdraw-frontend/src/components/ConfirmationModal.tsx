@@ -61,9 +61,10 @@ export default function ConfirmationModal({
             type="button"
             onClick={onConfirm}
             disabled={loading}
+            variant={variant === "destructive" ? "destructive" : "default"}
             className={`flex-1 ${
               variant === "destructive"
-                ? "text-white border-gray-600/50 hover:text-white hover:bg-gray-700/70 hover:border-gray-500 bg-transparent"
+                ? ""
                 : "bg-gray-700 hover:bg-gray-600 text-white px-6 cursor-pointer border border-gray-600/50"
             }`}
           >
