@@ -1,11 +1,13 @@
 import { FloatingDock } from "@/components/ui/floating-dock";
 import {
+  Hand,
   PencilIcon,
   Eraser,
   Minus,
   RectangleHorizontal,
   Circle,
   Type,
+  ArrowUpRight, // <-- added
 } from "lucide-react";
 import { Tool } from "@/types/tools";
 
@@ -14,6 +16,17 @@ export default function ToolBar({ selectedTool, setSelectedTool }: {
   setSelectedTool: (tool: Tool) => void 
 }) {
   const links = [
+    {
+      title: "Hand",
+      icon: (
+        <Hand
+          className={`h-full w-full ${
+            selectedTool === Tool.Hand ? "text-blue-500" : "text-neutral-300"
+          }`}
+        />
+      ),
+      onClick: () => setSelectedTool(Tool.Hand),
+    },
     {
       title: "Pencil",
       icon: (
@@ -25,7 +38,6 @@ export default function ToolBar({ selectedTool, setSelectedTool }: {
           }`}
         />
       ),
-      href: "#",
       onClick: () => setSelectedTool(Tool.Pencil),
     },
     {
@@ -39,7 +51,6 @@ export default function ToolBar({ selectedTool, setSelectedTool }: {
           }`}
         />
       ),
-      href: "#",
       onClick: () => setSelectedTool(Tool.Eraser),
     },
     {
@@ -53,7 +64,6 @@ export default function ToolBar({ selectedTool, setSelectedTool }: {
           }`}
         />
       ),
-      href: "#",
       onClick: () => setSelectedTool(Tool.Line),
     },
     {
@@ -67,7 +77,6 @@ export default function ToolBar({ selectedTool, setSelectedTool }: {
           }`}
         />
       ),
-      href: "#",
       onClick: () => setSelectedTool(Tool.Rectangle),
     },
     {
@@ -81,7 +90,6 @@ export default function ToolBar({ selectedTool, setSelectedTool }: {
           }`}
         />
       ),
-      href: "#",
       onClick: () => setSelectedTool(Tool.Circle),
     },
     {
@@ -95,15 +103,26 @@ export default function ToolBar({ selectedTool, setSelectedTool }: {
           }`}
         />
       ),
-      href: "#",
       onClick: () => setSelectedTool(Tool.Text),
+    },
+    {
+      title: "Arrow",
+      icon: (
+        <ArrowUpRight
+          className={`h-full w-full ${
+            selectedTool === Tool.Arrow ? "text-blue-500" : "text-neutral-300"
+          }`}
+        />
+      ),
+      onClick: () => setSelectedTool(Tool.Arrow),
     },
   ];
 
   return (
-    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
+    <div className="fixed bottom-6 left-6 md:left-1/2">
       <FloatingDock
         mobileClassName="translate-y-0"
+        desktopClassName="transform md:-translate-x-1/2"
         items={links}
       />
     </div>

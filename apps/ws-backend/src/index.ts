@@ -50,27 +50,34 @@ wss.on('connection', (ws, request) => {
             if(!user) return;
             user.rooms = user?.rooms.filter(room => room !== parsedData.room);
         }
-        else if(parsedData.type == "chat") {
+        else if(parsedData.type === "shape") {
             const roomId = parsedData.roomId;
             const message = parsedData.message;
 
-            users.forEach(user => {
-                if(user.rooms.includes(roomId)) {
-                    user.ws.send(JSON.stringify({
-                        type: 'chat',
-                        message: message,
-                        roomId: roomId
-                    }));
-                }
+            const usersInRoom = users.filter(u => u.rooms.includes(roomId));
+            usersInRoom.forEach(u => {
+                u.ws.send(JSON.stringify({
+                    type: 'shape',
+                    message: message,
+                    roomId: roomId
+                }));
             });
-            
-            await prismaClient.chat.create({
+
+            const shapeData = JSON.parse(message);
+            await prismaClient.shape.create({
                 data: {
-                    userId: authenticatedUserId,
                     roomId: Number(roomId),
-                    message: message
+                    type: shapeData.type,
+                    data: shapeData
                 }
             });
         }
     })
+
+    ws.on('close', () => {
+        const userIndex = users.findIndex(user => user.ws === ws);
+        if (userIndex !== -1) {
+            users.splice(userIndex, 1);
+        }
+    });
 });

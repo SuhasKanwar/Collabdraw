@@ -16,12 +16,28 @@ export default function CanvasClient({
   const [draw, setDraw] = useState<Draw>();
   const [selectedTool, setSelectedTool] = useState<Tool>(Tool.Pencil);
 
+  const [textInput, setTextInput] = useState<{
+    visible: boolean;
+    screenX: number;
+    screenY: number;
+    worldX: number;
+    worldY: number;
+    value: string;
+  }>({
+    visible: false,
+    screenX: 0,
+    screenY: 0,
+    worldX: 0,
+    worldY: 0,
+    value: "",
+  });
+
   useEffect(() => {
     draw?.setSelectedTool(selectedTool);
   }, [selectedTool, draw]);
 
   useEffect(() => {
-    if (canvasRef.current) {
+    if (canvasRef.current && socket) {
       const newDraw = new Draw(canvasRef.current, roomId, socket);
       setDraw(newDraw);
 
@@ -29,15 +45,54 @@ export default function CanvasClient({
         newDraw.destroy();
       };
     }
-  }, [canvasRef]);
+  }, [canvasRef, socket, roomId]);
+
+  const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (selectedTool !== Tool.Text || !draw) return;
+    e.preventDefault();
+    const rect = canvasRef.current!.getBoundingClientRect();
+    const screenX = e.clientX - rect.left;
+    const screenY = e.clientY - rect.top;
+    const { x: worldX, y: worldY } = draw.screenToWorld(screenX, screenY);
+    setTextInput({ visible: true, screenX, screenY, worldX, worldY, value: "" });
+  };
+
+  const commitText = () => {
+    if (draw && textInput.value.trim()) {
+      draw.addText(textInput.worldX, textInput.worldY, textInput.value);
+    }
+    setTextInput(prev => ({ ...prev, visible: false, value: "" }));
+  };
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-screen overflow-hidden relative">
       <canvas
         ref={canvasRef}
         width={window.innerWidth}
         height={window.innerHeight}
-      ></canvas>
+        onMouseDown={handleCanvasMouseDown}
+      />
+      {textInput.visible && (
+        <input
+          autoFocus
+          type="text"
+          value={textInput.value}
+          onChange={(e) =>
+            setTextInput((prev) => ({ ...prev, value: e.target.value }))
+          }
+          onBlur={commitText}
+          onKeyDown={(e) => e.key === "Enter" && commitText()}
+          style={{
+            position: "absolute",
+            top: textInput.screenY,
+            left: textInput.screenX,
+            color: "#ffffff",
+            background: "transparent",
+            border: "1px solid #ffffff",
+            outline: "none"
+          }}
+        />
+      )}
       <ToolBar selectedTool={selectedTool} setSelectedTool={setSelectedTool} />
     </div>
   );
