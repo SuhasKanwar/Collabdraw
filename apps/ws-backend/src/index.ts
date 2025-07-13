@@ -16,7 +16,7 @@ interface User {
     rooms: string[];
 }
 
-const users: User[] = [];
+const users = new Map<WebSocket, User>();
 
 wss.on('connection', (ws, request) => {
     const url = request.url;
@@ -34,7 +34,7 @@ wss.on('connection', (ws, request) => {
         return;
     }
 
-    users.push({
+    users.set(ws, {
         ws,
         userId: authenticatedUserId,
         rooms: []
@@ -44,11 +44,11 @@ wss.on('connection', (ws, request) => {
         const parsedData = JSON.parse(data as unknown as string);
 
         if(parsedData.type == "join_room") {
-            const user = users.find(user => user.ws === ws);
+            const user = users.get(ws);
             user?.rooms.push(parsedData.roomId);
         }
         else if(parsedData.type == "leave_room") {
-            const user = users.find(user => user.ws === ws);
+            const user = users.get(ws);
             if(!user) return;
             user.rooms = user?.rooms.filter(room => room !== parsedData.room);
         }
@@ -56,7 +56,7 @@ wss.on('connection', (ws, request) => {
             const roomId = parsedData.roomId;
             const message = parsedData.message;
 
-            const usersInRoom = users.filter(u => u.rooms.includes(roomId));
+            const usersInRoom = Array.from(users.values()).filter(u => u.rooms.includes(roomId));
             usersInRoom.forEach(u => {
                 u.ws.send(JSON.stringify({
                     type: 'shape',
@@ -78,7 +78,7 @@ wss.on('connection', (ws, request) => {
             const roomId = parsedData.roomId;
             const message = parsedData.message;
 
-            const usersInRoom = users.filter(u => u.rooms.includes(roomId));
+            const usersInRoom = Array.from(users.values()).filter(u => u.rooms.includes(roomId) && u.userId !== authenticatedUserId);
             usersInRoom.forEach(u => {
                 u.ws.send(JSON.stringify({
                     type: 'chat',
@@ -103,9 +103,6 @@ wss.on('connection', (ws, request) => {
     });
 
     ws.on('close', () => {
-        const userIndex = users.findIndex(user => user.ws === ws);
-        if (userIndex !== -1) {
-            users.splice(userIndex, 1);
-        }
+        users.delete(ws);
     });
 });
