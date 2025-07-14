@@ -10,6 +10,7 @@ COPY ./turbo.json ./
 
 RUN npm install -g pnpm
 RUN pnpm install --frozen-lockfile
+RUN pnpm run build:frontend
 
 COPY ./apps/collabdraw-frontend ./apps/collabdraw-frontend
 

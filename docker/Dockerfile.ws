@@ -12,6 +12,7 @@ COPY ./apps/ws-backend ./apps/ws-backend
 RUN npm install -g pnpm
 RUN pnpm install --frozen-lockfile
 RUN pnpm run db:generate
+RUN pnpm run build:ws
 
 EXPOSE 8080
 

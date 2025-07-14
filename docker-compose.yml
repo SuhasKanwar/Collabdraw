@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: collabdraw
+      POSTGRES_USER: collabdraw_user
+      POSTGRES_PASSWORD: collabdraw_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - collabdraw_volume:/var/lib/postgresql/data
+    networks:
+      - collabdraw-network
+
+  http-backend:
+    image: suhaskanwar/collabdraw-http:2995e72b2c138db8eb5ffa2d3dcc949de72b335d
+    environment:
+      - HTTP_SERVER_PORT=9090
+      - DATABASE_URL=postgresql://collabdraw_user:collabdraw_password@postgres:5432/collabdraw
+      - JWT_SECRET=secret
+    ports:
+      - "9090:9090"
+    depends_on:
+      - postgres
+    networks:
+      - collabdraw-network
+
+  ws-backend:
+    image: suhaskanwar/collabdraw-ws:2995e72b2c138db8eb5ffa2d3dcc949de72b335d
+    environment:
+      - WS_SERVER_PORT=8080
+      - DATABASE_URL=postgresql://collabdraw_user:collabdraw_password@postgres:5432/collabdraw
+      - JWT_SECRET=secret
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - collabdraw-network
+
+  frontend:
+    image: suhaskanwar/collabdraw-frontend:2995e72b2c138db8eb5ffa2d3dcc949de72b335d
+    environment:
+      - NEXT_PUBLIC_HTTP_BACKEND_URL=http://localhost:9090
+      - NEXT_PUBLIC_WS_BACKEND_BASE_URL=http://localhost:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - http-backend
+      - ws-backend
+    networks:
+      - collabdraw-network
+
+volumes:
+  collabdraw_volume:
+
+networks:
+  collabdraw-network:
+    driver: bridge
