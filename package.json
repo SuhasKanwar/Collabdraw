@@ -1,9 +1,16 @@
 {
   "name": "collabdraw",
+  "version": "1.0.0",
+  "description": "Collaborative drawing application",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
+    "start": "turbo run start",
+    "start:http": "pnpm --filter collabdraw-http-backend start",
+    "start:ws": "pnpm --filter collabdraw-ws-backend start",
+    "start:frontend": "pnpm --filter collabdraw-frontend start",
+    "db:generate": "cd packages/db && npx prisma generate && cd ../.. && pnpm install",
     "dev": "turbo run dev",
+    "build": "turbo run build",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"

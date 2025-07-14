@@ -28,8 +28,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     useEffect(() => {
         const storedToken = localStorage.getItem("token");
+        const storedUser = localStorage.getItem("user");
         if(storedToken) {
             setTokenState(storedToken);
+        }
+        if(storedUser) {
+            setUserState(JSON.parse(storedUser));
         }
     }, []);
 
@@ -45,15 +49,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const setUser = (user: any) => {
         if (user) {
             localStorage.setItem("user", JSON.stringify(user));
+            setUserState(user);
         } else {
             localStorage.removeItem("user");
+            setUserState(null);
         }
-        setUserState(JSON.parse(localStorage.getItem("user") || "null"));
     }
 
     const logout = () => {
         setToken(null);
-        setTokenState(null);
         setUser(null);
     }
 

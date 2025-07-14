@@ -56,7 +56,7 @@ wss.on('connection', (ws, request) => {
             const roomId = parsedData.roomId;
             const message = parsedData.message;
 
-            const usersInRoom = Array.from(users.values()).filter(u => u.rooms.includes(roomId));
+            const usersInRoom = Array.from(users.values()).filter(u => u.rooms.includes(roomId) && u.ws !== ws);
             usersInRoom.forEach(u => {
                 u.ws.send(JSON.stringify({
                     type: 'shape',
@@ -78,7 +78,7 @@ wss.on('connection', (ws, request) => {
             const roomId = parsedData.roomId;
             const message = parsedData.message;
 
-            const usersInRoom = Array.from(users.values()).filter(u => u.rooms.includes(roomId) && u.userId !== authenticatedUserId);
+            const usersInRoom = Array.from(users.values()).filter(u => u.rooms.includes(roomId) && u.ws !== ws);
             usersInRoom.forEach(u => {
                 u.ws.send(JSON.stringify({
                     type: 'chat',
