@@ -3,15 +3,18 @@ FROM node:22-alpine
 WORKDIR /app
 
 COPY ./package.json ./package.json
-COPY ./packages ./packages
 COPY ./pnpm-lock.yaml ./
 COPY ./pnpm-workspace.yaml ./
 COPY ./turbo.json ./
+
+COPY ./packages ./packages
 COPY ./apps/ws-backend ./apps/ws-backend
 
 RUN npm install -g pnpm
+
 RUN pnpm install --frozen-lockfile
 RUN pnpm run db:generate
+RUN pnpm run build:packages
 RUN pnpm run build:ws
 
 EXPOSE 8080

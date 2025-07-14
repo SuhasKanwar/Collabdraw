@@ -33,11 +33,11 @@ export const createRoomHandler = async (req: Request, res: Response): Promise<vo
             }
         });
 
-        room.joinedAt = userRoom.joinedAt;
+        const roomWithJoinedAt = { ...room, joinedAt: userRoom.joinedAt };
 
         res.status(201).json({
             message: 'Room created successfully',
-            room: room
+            room: roomWithJoinedAt
         });
         return;
     }
@@ -59,6 +59,11 @@ export const joinRoomHandler = async (req: Request, res: Response): Promise<void
     }
     try {
         const userId = req.userId;
+
+        if (!userId) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
 
         const room = await prismaClient.room.findFirst({
             where: { slug: slug }
@@ -86,11 +91,11 @@ export const joinRoomHandler = async (req: Request, res: Response): Promise<void
             }
         });
 
-        room.joinedAt = userRoomsWithDetails.joinedAt;
+        const roomWithJoinedAt = { ...room, joinedAt: userRoomsWithDetails.joinedAt };
 
         res.status(200).json({
             message: 'Joined room successfully',
-            room: room,
+            room: roomWithJoinedAt,
             currentUserId: userId
         });
         return;

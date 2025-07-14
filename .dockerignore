@@ -4,25 +4,18 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# Local env files
+# Build outputs
+.next
+dist
+build
+out
+
+# Environment files
 .env
-.env*.local
-
-# Vercel
-.vercel
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # IDE files
 .vscode
@@ -30,15 +23,9 @@ Thumbs.db
 *.swp
 *.swo
 
-# Build outputs
-dist
-build
-.next
-out
-
-# Logs
-logs
-*.log
+# OS files
+.DS_Store
+Thumbs.db
 
 # Git
 .git
@@ -46,9 +33,24 @@ logs
 
 # Docker
 Dockerfile*
-docker-compose*
+docker-compose*.yml
 .dockerignore
 
-# Cache directories
-.turbo
-.cache
+# Logs
+logs
+*.log
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# Dependency directories in apps and packages
+apps/*/node_modules
+packages/*/node_modules
+
+# Build artifacts
+apps/*/.next
+apps/*/dist
+apps/*/build
+packages/*/dist
+packages/*/build
