@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: suhaskanwar/collabdraw-frontend:998d606f04cd213b0728127c0c704764bdf6ba67
+        ports:
+        - containerPort: 80
+        env:
+        - name: HTTP_SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: HTTP_SERVER_PORT
+        - name: WS_SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: WS_SERVER_PORT
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: collabdraw-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+  - hosts:
+    - collabdraw.suhaskanwar.tech
+    secretName: collabdraw-tls
+  rules:
+  - host: collabdraw.suhaskanwar.tech
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: http-backend-service
+            port:
+              number: 9090
+      - path: /ws
+        pathType: Prefix
+        backend:
+          service:
+            name: ws-backend-service
+            port:
+              number: 8080

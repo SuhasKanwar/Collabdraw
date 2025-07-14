@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16
@@ -29,9 +27,7 @@ services:
       - collabdraw-network
 
   db-migrate:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile.migrate
+    image: suhaskanwar/collabdraw-db-migrate:1
     environment:
       - DATABASE_URL=postgresql://collabdraw_user:collabdraw_password@postgres:5432/collabdraw
     depends_on:
@@ -42,9 +38,7 @@ services:
     restart: "no"
 
   http-backend:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile.http
+    image: suhaskanwar/collabdraw-http:998d606f04cd213b0728127c0c704764bdf6ba67
     environment:
       - HTTP_SERVER_PORT=9090
       - DATABASE_URL=postgresql://collabdraw_user:collabdraw_password@postgres:5432/collabdraw
@@ -58,9 +52,7 @@ services:
       - collabdraw-network
 
   ws-backend:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile.ws
+    image: suhaskanwar/collabdraw-ws:998d606f04cd213b0728127c0c704764bdf6ba67
     environment:
       - WS_SERVER_PORT=8080
       - DATABASE_URL=postgresql://collabdraw_user:collabdraw_password@postgres:5432/collabdraw
@@ -74,9 +66,7 @@ services:
       - collabdraw-network
 
   frontend:
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile.frontend
+    image: suhaskanwar/collabdraw-frontend:998d606f04cd213b0728127c0c704764bdf6ba67
     environment:
       - NEXT_PUBLIC_HTTP_BACKEND_URL=http://http-backend:9090
       - NEXT_PUBLIC_WS_BACKEND_BASE_URL=http://ws-backend:8080

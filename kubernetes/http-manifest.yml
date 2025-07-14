@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-backend-service
+spec:
+  selector:
+    app: http-backend
+  ports:
+    - port: 9090
+      targetPort: 9090
+      protocol: TCP
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-backend-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: http-backend
+  template:
+    metadata:
+      labels:
+        app: http-backend
+    spec:
+      containers:
+      - name: http-backend
+        image: suhaskanwar/collabdraw-http:998d606f04cd213b0728127c0c704764bdf6ba67
+        ports:
+        - containerPort: 9090
+        env:
+        - name: HTTP_SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: HTTP_SERVER_PORT
+        - name: WS_SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: WS_SERVER_PORT
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: JWT_SECRET
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: DATABASE_URL

@@ -40,3 +40,5 @@ yarn-error.log*
 logs.txt
 
 dump
+
+app-secret.yaml
