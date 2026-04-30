@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/controllers/authenticationhandler.ts","./src/controllers/roomcontroller.ts","./src/middlewares/authentication.ts","./src/routes/authenticationrouter.ts","./src/routes/roomrouter.ts","./src/types/global.d.ts"],"version":"5.8.3"}
+{"root":["./src/index.ts","./src/controllers/authenticationHandler.ts","./src/controllers/roomController.ts","./src/middlewares/authentication.ts","./src/routes/authenticationRouter.ts","./src/routes/roomRouter.ts","./src/types/global.d.ts"],"version":"5.8.3"}
