@@ -27,7 +27,7 @@ services:
       - collabdraw-network
 
   db-migrate:
-    image: suhaskanwar/collabdraw-db-migrate:a44a0366443886baf0c5414d4f09459de0d0541e
+    image: suhaskanwar/collabdraw-db-migrate:688d6c8bff1a13ba20daf723770d0d55c5b2a88b
     environment:
       - DATABASE_URL=postgresql://collabdraw_user:collabdraw_password@postgres:5432/collabdraw
     depends_on:
@@ -38,7 +38,7 @@ services:
     restart: "no"
 
   http-backend:
-    image: suhaskanwar/collabdraw-http:a44a0366443886baf0c5414d4f09459de0d0541e
+    image: suhaskanwar/collabdraw-http:688d6c8bff1a13ba20daf723770d0d55c5b2a88b
     environment:
       - HTTP_SERVER_PORT=9090
       - DATABASE_URL=postgresql://collabdraw_user:collabdraw_password@postgres:5432/collabdraw
@@ -52,7 +52,7 @@ services:
       - collabdraw-network
 
   ws-backend:
-    image: suhaskanwar/collabdraw-ws:a44a0366443886baf0c5414d4f09459de0d0541e
+    image: suhaskanwar/collabdraw-ws:688d6c8bff1a13ba20daf723770d0d55c5b2a88b
     environment:
       - WS_SERVER_PORT=8080
       - DATABASE_URL=postgresql://collabdraw_user:collabdraw_password@postgres:5432/collabdraw
@@ -66,7 +66,7 @@ services:
       - collabdraw-network
 
   frontend:
-    image: suhaskanwar/collabdraw-frontend:a44a0366443886baf0c5414d4f09459de0d0541e
+    image: suhaskanwar/collabdraw-frontend:688d6c8bff1a13ba20daf723770d0d55c5b2a88b
     environment:
       - NEXT_PUBLIC_HTTP_BACKEND_URL=http://http-backend:9090
       - NEXT_PUBLIC_WS_BACKEND_BASE_URL=http://ws-backend:8080
